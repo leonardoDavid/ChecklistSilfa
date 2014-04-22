@@ -1,0 +1,14 @@
+.container-login{
+	width: 80%;
+	background: #FFF;
+	position: relative;
+	margin: 1em auto;
+}
+.container-login h1{
+	background: #16a085;
+	margin: 0;
+	border-bottom: 2px solid #138a72;
+	color: #EEE;
+	text-align: center;
+	font-weight: normal;
+}
