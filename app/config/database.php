@@ -55,11 +55,11 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'database',
+			'database'  => 'ChecklistSilfa',
 			'username'  => 'root',
-			'password'  => '',
+			'password'  => 'sql.,evo',
 			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
+			'collation' => 'utf8_spanish_ci',
 			'prefix'    => '',
 		),
 

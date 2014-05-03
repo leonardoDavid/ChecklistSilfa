@@ -1,14 +1,56 @@
-.container-login{
-	width: 80%;
-	background: #FFF;
-	position: relative;
-	margin: 1em auto;
-}
-.container-login h1{
-	background: #16a085;
-	margin: 0;
-	border-bottom: 2px solid #138a72;
-	color: #EEE;
+#login{
 	text-align: center;
-	font-weight: normal;
+}
+#login .logo{
+	float: none;
+}
+#login .logo img{
+	width: 60%;
+}
+#login .contenedor{
+	width: 95%;
+	float: none;
+	padding: 0;
+	background: #fff;
+	margin: 0 auto;
+	border-top: 2px solid #0067de;
+	-webkit-box-shadow: 1px 5px 3px 0px rgba(179, 179, 179, 0.5);
+	-moz-box-shadow: 1px 5px 3px 0px rgba(179, 179, 179, 0.5);
+	-o-box-shadow: 1px 5px 3px 0px rgba(179, 179, 179, 0.5);
+	-ms-box-shadow: 1px 5px 3px 0px rgba(179, 179, 179, 0.5);
+	box-shadow: 1px 5px 3px 0px rgba(179, 179, 179, 0.5);
+}
+#login .contenedor .input-login{
+	padding: .5em 1em;
+}
+#login .contenedor .input-login input{
+	border-left: 3px solid #0067DE;
+}
+#login .contenedor .submit{
+	padding: .5em 1em;
+	overflow: hidden;
+	text-align: left;
+	position: relative;
+}
+#login .contenedor .submit .remember-me{
+	position: absolute;
+	top: 33%;
+}
+#login .contenedor .submit .remember-me span.text{
+	position: relative;
+	bottom: 1em;
+}
+#login .contenedor .restore-pass{
+	background: rgba(0, 103, 222, 0.2);
+	padding: 1.4em 1em 1em 1em;
+	position: relative;
+}
+#login .contenedor .restore-pass:before{
+	position: absolute;
+	border-left: 18px solid rgba(0, 0, 0, 0);
+	border-right: 18px solid rgba(0, 0, 0, 0);
+	border-top: 13px solid #FFF;
+	content: "";
+	top: 0;
+	left: 46%;
 }

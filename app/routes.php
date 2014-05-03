@@ -9,6 +9,13 @@
 | que piden filtros de autorizacion de contenido
 |
 */
-Route::get('/', function(){
-	return View::make('login');
+Route::get('login', 'AuthController@showLogin');
+Route::post('login', 'AuthController@postLogin');
+
+//Solo accesibles con login previo
+Route::group(array('before' => 'auth'), function(){
+    Route::get('/', function(){
+        return View::make('dashboard');
+    });
+    Route::get('logout', 'AuthController@logOut');
 });

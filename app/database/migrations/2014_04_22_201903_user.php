@@ -13,16 +13,18 @@ class User extends Migration {
 	 */
 	public function up(){
 		Schema::create('user',function($tabla){
-			$tabla->increments('rut')->unique();
+			$tabla->increments('id')->unique();
+			$tabla->string('rut',10);
 			$tabla->string('mail',80);
 			$tabla->string('username',80);
-			$tabla->string('password',50);
+			$tabla->string('password',200);
 			$tabla->string('nombre',80);
 			$tabla->string('ape_paterno',80);
 			$tabla->string('ape_materno',80)->nullable();
 			$tabla->integer('tel_movil')->nullable();
 			$tabla->integer('tel_fijo')->nullable();
 			$tabla->integer('estado');
+			$tabla->string('remember_token');
 			$tabla->timestamps();
 		});
 	}
