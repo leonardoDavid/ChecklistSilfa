@@ -15,7 +15,7 @@ class Preguntas extends Migration {
 		Schema::create('preguntas',function($tabla){
 			$tabla->increments('id')->unique();
 			$tabla->text('texto');
-			$tabla->integer('orden');
+			$tabla->string('tipo');
 			$tabla->integer('estado');
 			$tabla->timestamps();
 		});

@@ -3,7 +3,7 @@
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class Usuario extends Eloquent implements UserInterface, RemindableInterface {
 
 	protected $table = 'user';
 	protected $hidden = array('password');
@@ -31,5 +31,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function getReminderEmail(){
 		return $this->email;
 	}
+
+	public function menus(){
+        return $this->belongsToMany('MainMenu', 'permisos_menu', 'user_id', 'permisos_id')->where('menu.estado','=','1');
+    }
 
 }

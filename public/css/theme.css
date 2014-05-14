@@ -1,3 +1,70 @@
+/*Icons pack from icommon*/
+@font-face {
+    font-family: 'icon';
+    src:url('./icons/icon.eot?-vhcl9i');
+    src:url('./icons/icon.eot?#iefix-vhcl9i') format('embedded-opentype'),
+        url('./icons/icon.woff?-vhcl9i') format('woff'),
+        url('./icons/icon.ttf?-vhcl9i') format('truetype'),
+        url('./icons/icon.svg?-vhcl9i#icon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-music:before {content: "\f001";}
+.icon-search:before {content: "\f002";}
+.icon-email:before {content: "\f003";}
+.icon-star:before {content: "\f005";}
+.icon-unstar:before {content: "\f006";}
+.icon-user:before {content: "\f007";}
+.icon-check:before {content: "\f00c";}
+.icon-wrong:before {content: "\f00d";}
+.icon-power-off:before {content: "\f011";}
+.icon-gear:before {content: "\f013";}
+.icon-trash:before {content: "\f014";}
+.icon-home:before {content: "\f015";}
+.icon-refresh:before {content: "\f021";}
+.icon-lock:before {content: "\f023";}
+.icon-flag:before {content: "\f024";}
+.icon-tag:before {content: "\f02b";}
+.icon-book:before {content: "\f02d";}
+.icon-bookmark:before {content: "\f02e";}
+.icon-print:before {content: "\f02f";}
+.icon-menu:before {content: "\f039";}
+.icon-left:before {content: "\f053";}
+.icon-right:before {content: "\f054";}
+.icon-wrong-circle:before {content: "\f057";}
+.icon-check-circle:before {content: "\f058";}
+.icon-question-circle:before {content: "\f059";}
+.icon-info-circle:before {content: "\f05a";}
+.icon-warning:before {content: "\f071";}
+.icon-calendar:before {content: "\f073";}
+.icon-comment:before {content: "\f075";}
+.icon-up:before {content: "\f077";}
+.icon-down:before {content: "\f078";}
+.icon-tack:before {content: "\f08d";}
+.icon-filter:before {content: "\f0b0";}
+.icon-group:before {content: "\f0c0";}
+.icon-store:before {content: "\e604";}
+.icon-bug:before {content: "\e603";}
+.icon-enter:before {content: "\e600";}
+.icon-exit:before {content: "\e602";}
+.icon-excel:before {content: "\e601";}
+
+
 /*Swtich Booton*/
 .onoffswitch {
     position: relative; width: 72px;
@@ -90,4 +157,264 @@
     top: 0;
     left: 0;
     background: #5BC0DE;
+}
+.main-contend{
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+.container{
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    left: 0%;
+    -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
+}
+.center{
+    text-align: center;
+    margin: 0 auto;
+}
+.loading-box{
+    position: fixed;
+    background: #F1E774;
+    left: 38.5%;
+    padding: 1em;
+    color: #575757;
+    display: none;
+}
+.container.disabled{
+    left: 65%;
+}
+.site{
+    margin-top: 45px;
+    padding-bottom: 60px;
+}
+.overlay-disabled.active{
+    opacity: 1;
+    left: 0%;
+}
+.overlay-disabled{
+    background: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    left: -100%;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 5;
+    -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
+}
+
+/*NavBar Menu*/
+.menu{
+    background: #5BC0DE;
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    width: 65%;
+    left: -66%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    z-index: 6;
+    position: absolute;
+    -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
+}
+.menu.active{
+    left: 0%;
+}
+.menu ul li{
+    padding: .5em 1em;
+    color: #EEE;
+    border-bottom: 1px solid rgba(238, 238, 238 , 0.5);
+}
+.menu ul li span[class^="icon-"]{
+    font-size: 2em;
+    position: relative;
+    top: .1em;
+    margin-right: .2em;
+}
+.menu ul li span.text{
+    position: relative;
+    top: -0.3em;
+}
+.menu ul a:hover li{
+    background: rgba(0, 0, 0, 0.1);
+}
+.menu ul a:hover{
+    text-decoration: none;
+}
+.menu .logo{
+    text-align: center;
+}
+.menu .logo img{
+    width: 50%;
+}
+.menu .logo figcaption{
+    left: 15%;
+    position: relative;
+    color: #EEE;
+}
+.navbar{
+    left: 0%;
+    width: 107%;
+    z-index: 0;
+    -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
+}
+.navbar.active{
+    left: 65%;
+}
+.show-menu,.show-menu-left{
+    font-size: 2.5em;
+    top: .15em;
+    left: 0.25em;
+    position: absolute;
+    color: #EEE;
+    cursor: pointer;
+}
+.progress{
+    width: 82%;
+    position: absolute;
+    left: 50px;
+    top: 4px;
+    height: 36px;
+}
+.porcent{
+    position: relative;
+    top: 4px;
+    font-size: 2em;
+}
+.show-menu-left{
+    right: 1.2em;
+    left: initial;
+}
+#need-data{
+    margin-top: 10px;
+}
+#need-data li{
+    position: relative;
+}
+#need-data span[class^='icon-']{
+    font-size: 2em;
+    color: #4B4B4B;
+}
+#need-data span.text{
+    position: absolute;
+    top: 5px;
+    left: 39px;
+}
+::-webkit-scrollbar {  
+    width: 4px;  
+}  
+::-webkit-scrollbar-track {  
+    background-color: #eaeaea;  
+    border-left: 1px solid #ccc;  
+}  
+::-webkit-scrollbar-thumb {  
+    background-color: #ccc;  
+}  
+::-webkit-scrollbar-thumb:hover {  
+    background-color: #aaa;  
+}
+
+/*Form de Ingreso*/
+.label-control{
+    font-size: 2em;
+}
+.container-input{
+    margin: 1em 0;
+}
+
+/*Form Ingreso de Checklist*/
+.question-container{
+    margin-bottom: 10px;
+    border-bottom: 1px solid #5BC0DE;
+    padding: .5em;
+}
+.question-text{
+    display: inline-block;
+    width: 77%;
+    vertical-align: top;
+}
+
+/*Question checkbox*/
+.question-check-container,
+.question-input-container{
+    display: inline-block;
+    width: 22%;
+    position: relative;
+}
+.question-check {
+    position: relative; width: 54px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    display: inline-block;
+}
+.question-check-checkbox {
+    display: none;
+}
+.question-check-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #EEEEEE; border-radius: 21px;
+}
+.question-check-inner {
+    width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+.question-check-inner:before, .question-check-inner:after {
+    float: left; width: 50%; height: 22px; padding: 0; line-height: 22px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+.question-check-inner:before {
+    content: "";
+    padding-left: 10px;
+    background-color: #2FCCFF; color: #FFFFFF;
+}
+.question-check-inner:after {
+    content: "";
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #EEEEEE;
+    text-align: right;
+}
+.question-check-switch {
+    width: 28px; margin: -3px;
+    background: #FFFFFF;
+    border: 2px solid #EEEEEE; border-radius: 21px;
+    position: absolute; top: 0; bottom: 0; right: 28px;
+    height: 30px;
+    top: 1px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+}
+.question-check-checkbox:checked + .question-check-label .question-check-inner {
+    margin-left: 0;
+}
+.question-check-checkbox:checked + .question-check-label .question-check-switch {
+    right: 0px; 
+}
+.comment{
+    font-size: 2em;
+    position: relative;
+    top: -7px;
+    left: 12px;
+    color: #4B4B4B;
+    cursor: pointer;
+}
+.question-input-container .comment{
+    top: 0;
+    left: 0;
+}
+.text-comment{
+    width: 100%;
+    height: 200px;
+    resize:none;
 }
