@@ -1,10 +1,4 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| Controlador de la Carga de las paginas del sitio, todo con los respectivos
-| permisos que tiene cada usuario para visualizar el contenido
-|--------------------------------------------------------------------------
-*/
 class SiteController extends BaseController {
     /*
 	|--------------------------------------------------------------------------
@@ -105,7 +99,7 @@ class SiteController extends BaseController {
 	    	foreach ($form as $question){
 	    		$questions .= View::make('Forms.Question',array(
 	    			'Type' => $question->tipo,
-	    			'ID' => $question->id,
+	    			'ID' => 'question-'.$question->id,
 	    			'Pregunta' => $question->texto,
 	    			'CheckID' => md5($question->id.$question->texto.date("Ymd"))
 	    		));
@@ -118,9 +112,42 @@ class SiteController extends BaseController {
 	    		'Area' => $area->nombre,
 	    		'Tienda' => $tienda->nombre,
 	    		'Sucursal' => $sucursal->nombre,
-	    		'Form' => $questions
+	    		'Form' => $questions,
+	    		'Total' => count($form)
 	    	));
 	    }
+    }
+    public function saveChecklist(){
+    	$datos = array();
+
+    	if (Request::ajax()){
+
+    		$datos = Input::get('valores');
+
+    		if(count($datos) > 0){
+    			Session::push('save_success', 'Checklist guardado con éxito !');
+    			$response = array(
+    				'status' => true
+    			);
+    		}
+    		else{
+    			$response = array(
+	    			'status' => false,
+	    			'motivo' => "Error en la recepción de datos",
+	    			'codigo' => 112
+	    		);
+    		}
+	    		
+    	}
+    	else{
+    		$response = array(
+    			'status' => false,
+    			'motivo' => "Error en la Solicitud de Guardado",
+    			'codigo' => 110
+    		);
+    	}
+
+    	return json_encode($response);
     }
 
     /*

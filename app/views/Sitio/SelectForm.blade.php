@@ -11,6 +11,16 @@
 @section('contenido')
     <section class="container site">
 		
+		@if(Session::has('save_success'))
+		<div class="row">
+        	<div class="col-xs-12 col-md-12 alert alert-dismissable alert-success">
+	            <button type="button" class="close" data-dismiss="alert">×</button>
+	            <?php $val = Session::get('save_success') ?>
+            	<strong>Yeah! </strong> {{ $val[0] }}
+        	</div>
+        </div>
+        @endif        
+
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header">
 				<span class="icon-menu show-menu"></span>
@@ -68,7 +78,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="error-server">
+        <div class="modal fade" id="error-server" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -87,7 +97,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="error-client">
+        <div class="modal fade" id="error-client" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -106,7 +116,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="error-valid">
+        <div class="modal fade" id="error-valid" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -213,5 +223,11 @@
 			$('#unfields-valid').html(msj_errors);
 			$('#error-valid').modal();
 		})();
+	@endif
+	@if (Session::has('save_success'))
+		setTimeout(function() {
+            $('.alert').slideUp();
+        }, 3000);
+        <?php Session::forget('save_success', '0'); ?>
 	@endif
 @stop

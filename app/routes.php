@@ -14,14 +14,20 @@ Route::post('login', 'AuthController@postLogin');
 
 //Solo accesibles con login previo
 Route::group(array('before' => 'auth'), function(){
-	//Retorna un menu de estadisticas del sistema
+	/**
+	* Previas a un filtro de acceso por usuario
+	*/
     Route::get('/', 'SiteController@getDashboard');
-    //Ruta para Cerrar la Sesion del user
-    Route::get('logout', 'AuthController@logOut');
-
-    //Rutas para un checklist
     Route::get('ingresar', 'SiteController@getSelectForm');
     Route::post('ingresar', 'SiteController@loadChecklist');
+
+    /**
+    * Rutas que son response de algun AJAX
+    */
     Route::post('ingresar/tienda', 'SiteController@ajaxSucursales');
+    Route::post('save-checklist', 'SiteController@saveChecklist');
+
+    //Ruta para Cerrar la Sesion del user
+    Route::get('logout', 'AuthController@logOut');
 
 });

@@ -1,4 +1,4 @@
-<div class="question-container" data-question="" id="{{ $ID }}" data-type="{{ $Type }}" data-comment="">
+<div class="question-container" id="{{ $ID }}" data-type="{{ $Type }}" data-comment="">
     <div class="question-text">{{ $Pregunta }}</div>
     @if ($Type == "checkbox")
         <div class="question-check-container">
@@ -22,6 +22,5 @@
                 :(
             </p>
         </div>
-    @endif
-        
+    @endif        
 </div>
