@@ -28,7 +28,7 @@ class AuthController extends BaseController {
             'password' => Input::get('password')
         );
         $loginWithEmail = array(
-            'mail' => Input::get('username'),
+            'email' => Input::get('username'),
             'password' => Input::get('password')
         );
         // Validamos los datos y además mandamos como un segundo parámetro la opción de recordar el usuario.
