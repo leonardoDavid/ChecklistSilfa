@@ -4,13 +4,13 @@
         <figcaption>Checklist System</figcaption>
     </figure>
 	<ul class="list-unstyled">
+		{{ $MoreMenu }}
 		<a href="/perfil">
 			<li>
 				<span class="icon-user"></span>
 				<span class="text">Mi Perfil</span>
 			</li>
 		</a>
-		{{ $MoreMenu }}
 		<a href="#" id="bug">
 			<li>
 				<span class="icon-bug"></span>

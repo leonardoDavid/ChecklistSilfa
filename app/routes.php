@@ -10,7 +10,7 @@
 |
 */
 Route::get('login', 'AuthController@showLogin');
-Route::post('login', 'AuthController@postLogin');
+Route::post('login', array('before' => 'csrf', 'uses' => 'AuthController@postLogin'));
 
 //Solo accesibles con login previo
 Route::group(array('before' => 'auth'), function(){
@@ -22,12 +22,31 @@ Route::group(array('before' => 'auth'), function(){
     Route::post('ingresar', 'SiteController@loadChecklist');
 
     /**
-    * Rutas que son response de algun AJAX
+    * Rutas que son response de algun AJAX , tambien deben pasar por el filtro de acceso de usuario
     */
     Route::post('ingresar/tienda', 'SiteController@ajaxSucursales');
-    Route::post('save-checklist', 'SiteController@saveChecklist');
+    Route::post('ingresar/save-checklist', array('before' => 'csrf', 'uses' => 'SiteController@saveChecklist') );
+    Route::post('send-bug','SiteController@notifyBug');
+
+    /**
+    * Rutas sin filtro de usuario, solo login
+    */    
+    Route::get('perfil','ProfileController@getProfile');
 
     //Ruta para Cerrar la Sesion del user
     Route::get('logout', 'AuthController@logOut');
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| Rutas con filtros de Acceso
+|--------------------------------------------------------------------------
+|
+| Estas rutas se verifica primero que el usuario quien se logeo tenga
+| prmisos para poder ver la ruta que esta solictando
+|
+*/
+Route::when('/','access');
+Route::when('ingresar','access:/ingresar');
+Route::when('ingresar/*','access:/ingresar');

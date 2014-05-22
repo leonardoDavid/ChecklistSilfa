@@ -33,7 +33,7 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public function menus(){
-        return $this->belongsToMany('MainMenu', 'permisos_menu', 'user_id', 'permisos_id')->where('menu.estado','=','1');
+        return $this->belongsToMany('MainMenu', 'permisos_menu', 'user_id', 'permisos_id')->where('menu.estado','=','1')->orderBy('menu.id');
     }
 
 }

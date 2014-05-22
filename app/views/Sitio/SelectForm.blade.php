@@ -20,6 +20,8 @@
         	</div>
         </div>
         @endif        
+		
+		<h1 class="title-page">Ingreso de Checklist</h1>
 
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header">
@@ -149,6 +151,7 @@
 		$('#begin').attr('disabled', true);
 		$('#sucursal').attr('disabled', true);
 		if($('#tienda').val() != '0'){
+			$('.loading-box').text('Cargando ...');
 			$('.loading-box').fadeIn();
 			$.ajax({
 	            type: 'post',

@@ -11,13 +11,18 @@ class SiteController extends BaseController {
 	*/
     public function getDashboard(){
     	$MoreMenu = $this->_getMenu();
+        $users = Usuario::where('estado','=','1')->count();
+        $tiendas = Tienda::where('estado','=','1')->count();
+        $reportes = ChecklistRepo::where('estado','=','1')->count();
     	return View::make('Sitio.dashboard',array(
     		'MainMenu' => View::make('Menu.MainMenu',array(
     			'MoreMenu' => $MoreMenu
-    		))
+    		)),
+            'Reportes' => $reportes,
+            'Users' => $users,
+            'Tiendas' => $tiendas
     	));
     }
-
     public function getSelectForm(){
     	$MoreMenu = $this->_getMenu();
     	$Areas = $this->_getAreas();
@@ -97,9 +102,13 @@ class SiteController extends BaseController {
 
 	    	$questions = "";
 	    	foreach ($form as $question){
+	    		if($question->id < 10)
+	    			$hash = "0".$question->id;
+	    		else
+	    			$hash = $question->id;
 	    		$questions .= View::make('Forms.Question',array(
 	    			'Type' => $question->tipo,
-	    			'ID' => 'question-'.$question->id,
+	    			'ID' => $hash.md5($question->id.date("Ymdhis")),
 	    			'Pregunta' => $question->texto,
 	    			'CheckID' => md5($question->id.$question->texto.date("Ymd"))
 	    		));
@@ -110,8 +119,11 @@ class SiteController extends BaseController {
 	    			'MoreMenu' => $MoreMenu
 	    		)),
 	    		'Area' => $area->nombre,
+	    		'AreaID' => $area->id,
 	    		'Tienda' => $tienda->nombre,
+	    		'TiendaID' => $tienda->id,
 	    		'Sucursal' => $sucursal->nombre,
+	    		'SucursalID' => $sucursal->id,
 	    		'Form' => $questions,
 	    		'Total' => count($form)
 	    	));
@@ -123,12 +135,92 @@ class SiteController extends BaseController {
     	if (Request::ajax()){
 
     		$datos = Input::get('valores');
+    		$area = Input::get('area');
+    		$sucursal = Input::get('sucursal');
 
-    		if(count($datos) > 0){
-    			Session::push('save_success', 'Checklist guardado con éxito !');
-    			$response = array(
-    				'status' => true
-    			);
+    		if(count($datos) > 0 && is_numeric($area) && is_numeric($sucursal)){
+
+    			//Se crea un nuevo registro de checklist
+    			$checklist = new ChecklistRepo;
+    			$checklist->area_id = $area;
+    			$checklist->sucursal_id = $sucursal;
+    			$checklist->user_id = Auth::user()->id;
+    			$checklist->comentario = Input::get('final-comment');
+    			$checklist->estado = 1;
+    			try{
+    				$checklist->save();
+    				$status = true;
+    			}
+    			catch(Exception $e){
+    				$status = false;
+    			}
+
+    			if($status){
+    				//Guardando una a una las preguntas
+    				$ides = "CHECKLIST:".$checklist->id."&&--";
+	    			foreach ($datos as $answer){
+	    				$resp = new ChecklistDetalle;
+	    				$resp->checklist_id = $checklist->id;
+	    				$resp->preguntas_form_id = (int)substr($answer['id'], 0,2);
+	    				$resp->respuesta = $answer['valor'];
+	    				$resp->comentario = $answer['comment'];
+	    				$resp->estado = 1;
+
+	    				try{
+	    					$resp->save();
+	    					$status = true;
+	    					$ides .= $resp->id."#";
+	    				}	
+	    				catch(Exception $e){
+	    					$status = false;
+	    					break;
+	    				}
+	    			}
+
+                    $datos = array(
+                        'template' => "emails.NotifyChecklist",
+                        'info' => array(
+                            'user' => Auth::user()->nombre." ".Auth::user()->ape_paterno,
+                            'email' => Auth::user()->email,
+                            'ID' => "#".$checklist->id,
+                            'dia' => date('d/m/Y'),
+                            'hora' => date("h:m:s")
+                        ),
+                        'receptor' => array(
+                            'email' => Auth::user()->email,
+                            'name' => Auth::user()->nombre." ".Auth::user()->ape_paterno,
+                            'subject' => 'Ingreso Exitoso'
+                        )
+                    );
+
+                    $verifyEmail = $this->_sendEmail($datos);
+                    if($verifyEmail && $status){
+                        Session::push('save_success', 'Checklist guardado con éxito! (Se envio una copia a su correo)');
+                        $response = array(
+                            'status' => true
+                        );
+                    }
+    				else if($status){
+    					Session::push('save_success', 'Checklist guardado con éxito !');
+    					$response = array(
+		    				'status' => true
+    					);
+    				}
+    				else{
+    					$response = array(
+			    			'status' => false,
+			    			'motivo' => "Error al momento de almacenar la información",
+			    			'codigo' => 114
+			    		);
+    				}
+    			}
+    			else{
+    				$response = array(
+		    			'status' => false,
+		    			'motivo' => "Error al momento de almacenar la información",
+		    			'codigo' => 113
+		    		);
+    			}
     		}
     		else{
     			$response = array(
@@ -148,6 +240,63 @@ class SiteController extends BaseController {
     	}
 
     	return json_encode($response);
+    }
+    public function notifyBug(){
+
+        if(Request::ajax()){
+            $msj = Input::get('mensajes');
+            $validations = Validator::make(
+                array(
+                    'mensaje' => $msj
+                ),
+                array(
+                    'mensaje' => 'required|min:3'
+                )
+            );
+
+            if($validations->fails()){
+                $errors = array();
+                foreach ($validations->messages()->all() as $mensaje){
+                    array_push($errors, $mensaje);
+                }
+                
+                $response = array(
+                    'status' => false,
+                    'motivo' => $errors,
+                    'codigo' => 122
+                );
+            }
+            else{
+                $datos = array(
+                    'template' => "emails.NotifyBug",
+                    'info' => array(
+                        'user' => Auth::user()->nombre." ".Auth::user()->ape_paterno,
+                        'email' => Auth::user()->email,
+                        'mensaje' => $msj
+                    ),
+                    'receptor' => array(
+                        'email' => 'leo.david.mm@gmail.com',
+                        'name' => 'Leonardo David',
+                        'subject' => 'Notificacion de Bug'
+                    )
+                );
+
+                $response = array(
+                    'status' => $this->_sendEmail($datos),
+                    'motivo' => "Error en el envio",
+                    'codigo' => 123
+                );
+            }
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'motivo' => "El request no es el correcto",
+                'codigo' => 121
+            );
+        }           
+
+        return $response;
     }
 
     /*
@@ -171,7 +320,6 @@ class SiteController extends BaseController {
     	}
     	return $response;
     }
-
     private function _getAreas(){
     	$response = "";
     	$items = AreaType::where('estado','=','1')->get();
@@ -180,7 +328,6 @@ class SiteController extends BaseController {
     	}
     	return $response;
     }
-
     private function _getTiendas(){
     	$response = "";
     	$items = Tienda::where('estado','=','1')->get();
@@ -188,5 +335,10 @@ class SiteController extends BaseController {
     		$response .= "<option value='".$item->id."'>".utf8_encode($item->nombre)."</option>";
     	}
     	return $response;
+    }
+    private function _sendEmail($datos){
+        return Mail::queue($datos['template'], $datos['info'] , function($message) use($datos) {
+            $message->to($datos['receptor']['email'], $datos['receptor']['name'])->subject($datos['receptor']['subject']);
+        });
     }
 }

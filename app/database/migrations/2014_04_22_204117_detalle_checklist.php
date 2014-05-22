@@ -16,7 +16,7 @@ class DetalleChecklist extends Migration {
 			$tabla->increments('id')->unique();
 			$tabla->integer('checklist_id');
 			$tabla->integer('preguntas_form_id');
-			$tabla->integer('respuesta');
+			$tabla->string('respuesta');
 			$tabla->text('comentario')->nullable();
 			$tabla->integer('estado');
 			$tabla->timestamps();

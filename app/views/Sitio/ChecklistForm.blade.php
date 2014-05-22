@@ -1,5 +1,9 @@
 @extends('main')
 
+@section('special-meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@stop
+
 @section('title')
 	Checklist - Sistema de Checklist
 @stop
@@ -21,15 +25,16 @@
 				</div>
 			</div>
 		</div>
-        <h1 class="center">Ingreso de Checklist</h1>
+        <h1 class="title-page">Ingreso de Checklist</h1>
 		<ul class="list-unstyled" id="need-data">
 			<li><span class="icon-user"></span> <span class="text"> <strong>Usuario: </strong>	{{ Auth::user()->nombre." ".Auth::user()->ape_paterno; }}</span> </li>
-			<li><span class="icon-flag"></span> <span class="text"> <strong>Area: </strong>	{{ $Area }} </span></li>
-			<li><span class="icon-store"></span> <span class="text"> <strong>Tienda: </strong>	{{ $Tienda }} </span></li>
-			<li><span class="icon-tack"></span> <span class="text"> <strong>Sucursal: </strong>	{{ $Sucursal }} </span></li>
+			<li><span class="icon-flag"></span> <span class="text" id="area" data-id="{{ $AreaID }}"> <strong>Area: </strong>	{{ $Area }} </span></li>
+			<li><span class="icon-store"></span> <span class="text" id="tienda" data-id="{{ $TiendaID }}"> <strong>Tienda: </strong>	{{ $Tienda }} </span></li>
+			<li><span class="icon-tack"></span> <span class="text" id="sucursal" data-id="{{ $SucursalID }}"> <strong>Sucursal: </strong>	{{ $Sucursal }} </span></li>
 		</ul>
 		<form action="/ingresar/save" method="post">
 			{{ $Form }}
+            <textarea name="final-comment" id="final-comment" class="form-control comment-final" placeholder="Algun resumen general de tu visita?"></textarea>
 		</form>
 		<div class="center">
 			<button class="btn btn-danger" id="cancel-checklist">Cancelar</button>
@@ -108,7 +113,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" id="cancel-sure">Aceptar</button>
-                        <button type="button" class="btn btn-primary" id="abort-sure">Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -128,7 +133,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="send-complete">Si, enviar</button>
-                        <button type="button" class="btn btn-danger" id="cancel-complete">NO! CANCELAR!! :(</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">NO! CANCELAR!! :(</button>
                     </div>
                 </div>
             </div>
@@ -145,6 +150,14 @@
 
     $("input[type=checkbox]").on("click",refreshPorcent);
     $('input[type="text"]').keyup(refreshPorcent);
+
+    $(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    });
 
     function refreshPorcent(){
         tmp = $("input:checked").length;
@@ -188,11 +201,16 @@
 
             answers.push(tmp);
         });
-
         $.ajax({
-            url: '/save-checklist',
+            url: '/ingresar/save-checklist',
             type: 'post',
-            data: { 'valores' : answers },
+            data: { 
+                'valores' : answers , 
+                'final-comment' : $('#final-comment').val(),
+                'area' : $('#area').data('id'),
+                'sucursal' : $('#sucursal').data('id'),
+                'tienda' : $('#tienda').data('id')
+            },
             success : function(response){
                 log = response;
                 response = JSON.parse(response);
@@ -217,8 +235,7 @@
                     $('#error-server').modal();
                 });
             }
-        });
-        
+        });        
     }
 
     $('.comment').click(function(){
@@ -241,10 +258,6 @@
         $('#sure').modal();
     });
 
-    $('#cancel-complete').click(function(){
-        $('#not-complete').modal('hide');
-    });
-
     $('#send-complete').click(function(){
         $('#not-complete').modal('hide');
         sendData();
@@ -252,10 +265,6 @@
 
     $('#cancel-sure').click(function(){
         window.location = '/ingresar';
-    });
-
-    $('#abort-sure').click(function(){
-        $('#sure').modal('hide');
     });
 
     $('#save-checklist').click(function(){

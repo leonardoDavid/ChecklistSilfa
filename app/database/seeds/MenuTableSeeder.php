@@ -6,6 +6,12 @@
 class MenuTableSeeder extends Seeder{
     public function run(){
         MainMenu::create(array(
+            'nombre' => "Dashboard",
+            'url' => "/",
+            'icon' => "icon-home",
+            'estado' => 1
+        ));
+        MainMenu::create(array(
             'nombre' => "Ingresar Checklist",
             'url' => "/ingresar",
             'icon' => "icon-check",

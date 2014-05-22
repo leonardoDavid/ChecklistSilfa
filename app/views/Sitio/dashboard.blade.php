@@ -17,25 +17,23 @@
 			</div>
 		</div>
 
-		<h1>Bienvenido {{ Auth::user()->id; }}</h1>
+		<h1 class="title-page">Dashboard</h1>
 
-        <!-- Modales -->
-        <div class="modal fade" id="forgot-password">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Modal title</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>One fine body…</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
+        <!-- Resumen de Estadisticas -->
+        <div class="statics statics-user">
+            <span class="icon-user"></span>
+            <span class="number">{{ $Users }}</span>
+            <span class="text">Usuarios</span>
+        </div>
+        <div class="statics statics-report">
+            <span class="icon-excel"></span>
+            <span class="number">{{ $Reportes }}</span>
+            <span class="text">Reportes</span>
+        </div>
+        <div class="statics statics-local">
+            <span class="icon-store"></span>
+            <span class="number">{{ $Tiendas }}</span>
+            <span class="text">Tiendas</span>
         </div>
 
 		<div class="overlay-disabled"></div>

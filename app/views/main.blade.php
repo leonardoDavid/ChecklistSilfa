@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="Sistema de Checklist para supervisores Silfa">
     <meta name="author" content="Evolutionet Chile">
+    @yield('special-meta')
     <link rel="shortcut icon" href="/img/favicon.ico">
     <title>@yield('title','Sistema de Checklist')</title>
 
@@ -28,6 +29,30 @@
 
 		<!-- Contenido -->
 	    @yield('contenido')
+
+        <!-- Modal de Bug -->
+        <div class="modal fade" id="bug-detected" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Reporte de Error</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            De antemano muchisimas gracias por notificarnos este error/felicitación, te responderemos a la brebedad.
+                        </p>
+                        <div class="form-group">
+                            <textarea id="text-bug" class="form-control comment-bug" placeholder="Que nos quieres notificar?"></textarea>
+                        </div>                        
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-info" id="send-bug">Enviar</button>
+                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <div class="overlay-loading">
@@ -46,19 +71,88 @@
         $(document).on('ready',function(){
             $('.overlay-loading').fadeOut();
             $('.show-menu').click(function(event) {
-            	$('.menu').addClass('active');
-            	$('.container').addClass('disabled');
-            	$('.overlay-disabled').addClass('active');  	
-            	$('.navbar').addClass('active');  	
+                showMenu();
             });
             $('.overlay-disabled').click(function(event){
-            	$('.menu').removeClass('active');
-            	$('.overlay-disabled').removeClass('active');
-            	$('.navbar').removeClass('active');  	
-            	$('.container').removeClass('disabled');  
+            	hideMenu();
+            });
+            $('#bug').click(function(event) {
+                hideMenu();
+                $('#text-bug').val("");
+                setTimeout(function() {
+                    $('#bug-detected').modal();
+                }, 300);
             });
             @yield('scripts')
         });
+
+        $('#text-bug').focus(function(event) {
+            $('.form-group').removeClass('has-error');
+        });
+
+        $('#send-bug').click(function(event) {
+            if($('#text-bug').val() != ""){
+                $('.loading-box').text('Enviando ...');
+                $('.loading-box').fadeIn();
+                $('#bug-detected').modal('hide');
+                $.ajax({
+                    url: '/send-bug',
+                    type: 'post',
+                    data: { mensajes: $('#text-bug').val() },
+                    success : function(response){
+                        log = response;
+                        if(response['status']){
+                            $('.loading-box').html('<span class="icon-check"><span> Enviado');
+                            setTimeout(function() {
+                                $('.loading-box').fadeOut();
+                            }, 3000);
+                        }
+                        else{
+                            $('.loading-box').fadeOut();
+                            if(response['motivo'].length > 0){
+                                var msjErrors = "<ul>";
+                                for (var i = 0; i < response['motivo'].length; i++) {
+                                    msjErrors = msjErrors + "<li>" + response['motivo'][i] + "</li>";                                
+                                };
+                                msjErrors = msjErrors + "</ul";
+                            }
+                            else
+                                msjErrors = response['motivo'];
+                            $('#error-motivo').html(msjErrors);
+                            $('#error-codigo').text(response['codigo']);
+                            $('#error-server').modal();
+                        }
+                    },
+                    error : function(xhr){
+                        log = xhr;
+                        $('.loading-box').fadeOut();
+                        if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
+                            $('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
+                        else if(xhr.status == 404)
+                            $('#error-motivo').text('Error del servidor :(');
+                        $('#error-codigo').text(xhr.status);
+                        $('#error-server').modal();
+                    }
+                });
+                
+            }
+            else{
+                $('.form-group').addClass('has-error');
+            }
+        });
+
+        function showMenu(){
+            $('.menu').addClass('active');
+            $('.container').addClass('disabled');
+            $('.overlay-disabled').addClass('active');      
+            $('.navbar').addClass('active');
+        }
+        function hideMenu(){
+            $('.menu').removeClass('active');
+            $('.overlay-disabled').removeClass('active');
+            $('.navbar').removeClass('active');     
+            $('.container').removeClass('disabled');
+        }
     </script>
 </body>
 </html>

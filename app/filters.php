@@ -65,9 +65,37 @@ Route::filter('guest', function(){
 | session does not match the one given in this request, we'll bail.
 |
 */
+Route::filter('csrf', function() {
+   	$token = Request::ajax() ? Request::header('X-CSRF-Token') : Input::get('_token');
+   	if (Session::token() != $token) {
+      	throw new Illuminate\Session\TokenMismatchException;
+   	}
+});
 
-Route::filter('csrf', function(){
-	if (Session::token() != Input::get('_token'))	{
-		throw new Illuminate\Session\TokenMismatchException;
+/*
+|--------------------------------------------------------------------------
+| Filtro de Acceso a Rutas
+|--------------------------------------------------------------------------
+|
+| Este filtro permite determinar si un usuario logeado tiene acceso parcial
+| a la url que esta solicitando, se verifica si tiene permisos de acceso 
+| a traves de los valores asignados de la tabla menu
+|
+*/
+Route::filter('access',function($route,$request,$url = '/'){
+	//dd($url);
+	if(Auth::guest()){
+		return Redirect::to('/login');
+	}
+	else{
+		$tmp = MainMenu::where('url','=',$url)->get()->take(1)->toArray();
+		if($tmp[0]['id'] >= 0){
+			$permiss = Permisos::where('permisos_id','=',$tmp[0]['id'])->where('user_id','=',Auth::user()->id)->get()->toArray();
+			if(count($permiss) == 0){
+				return Redirect::to('/perfil')->with('error_url', 'No tienes acceso a '.$tmp[0]['nombre']);
+			}
+		}
+		else
+			return Redirect::to('/perfil')->with('error_url', 'No tienes acceso a '.$tmp[0]['nombre']);
 	}
 });
