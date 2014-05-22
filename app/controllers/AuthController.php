@@ -25,11 +25,13 @@ class AuthController extends BaseController {
         // Guardamos en un arreglo los datos del usuario.
         $loginWithUser = array(
             'username' => Input::get('username'),
-            'password' => Input::get('password')
+            'password' => Input::get('password'),
+            'estado'   => '1'
         );
         $loginWithEmail = array(
             'email' => Input::get('username'),
-            'password' => Input::get('password')
+            'password' => Input::get('password'),
+            'estado'   => '1'
         );
         // Validamos los datos y además mandamos como un segundo parámetro la opción de recordar el usuario.
         if(Auth::attempt( $loginWithUser , Input::get('remember', 0) )){
@@ -40,7 +42,7 @@ class AuthController extends BaseController {
         }
         // Retornar con withInput() para retornar el valor de los inputs
         return Redirect::to('login')
-            ->with('error_login', 'Tus datos son incorrectos ');
+            ->with('error_login', 'Tus datos son incorrectos o estas deshabilitado');
     }
 
     /**

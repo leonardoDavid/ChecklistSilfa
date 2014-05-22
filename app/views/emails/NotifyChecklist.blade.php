@@ -62,7 +62,7 @@
 		<table class="header" style="width: 90%;margin: 0 auto;border-spacing: 0px;text-align: center;margin-bottom: 1em;">
 			<tr>
 				<td>
-					<img src="http://checklist.evo/img/silfa.svg" alt="Silfa Logo" height="70" width="200">
+					<img src="http://checklist.evolutionet.cl/img/silfa.png" alt="Silfa Logo" height="70" width="200">
 					<span style="display: block;">Sistema de Checklist</span>
 				</td>
 			</tr>

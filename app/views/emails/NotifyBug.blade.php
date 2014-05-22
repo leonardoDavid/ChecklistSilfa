@@ -62,7 +62,7 @@
 		<table class="header" style="width: 90%;margin: 0 auto;border-spacing: 0px;text-align: center;margin-bottom: 1em;">
 			<tr>
 				<td>
-					<img src="http://checklist.evo/img/silfa.svg" alt="Silfa Logo" height="70" width="200">
+					<img src="http://checklist.evolutionet.cl/img/silfa.png" alt="Silfa Logo" height="70" width="200">
 					<span style="display: block;">Sistema de Checklist</span>
 				</td>
 			</tr>
@@ -81,7 +81,7 @@
 				</tr>
 				<tr>
 					<td style="padding: 0.5em 1em;">
-						<img src="http://checklist.evo/img/emails/email.png" alt="Silfa Logo" height="48" width="48" style="display: inline-block;vertical-align: top;">
+						<img src="http://checklist.evolutionet.cl/img/emails/email.png" alt="Silfa Logo" height="48" width="48" style="display: inline-block;vertical-align: top;">
 						<p style="display: inline-block;vertical-align: top;margin:.1em 0 0 0;width: 85%;">
 							<span style="display: block;"><b>Nombre: </b>{{ $user }}</span>
 							<span style="display: block;"><b>Correo: </b>{{ $email }}</span>
@@ -90,7 +90,7 @@
 				</tr>
 				<tr>
 					<td style="padding: 0.5em 1em;">
-						<img src="http://checklist.evo/img/emails/notes.png" alt="Silfa Logo" height="48" width="48" style="display: inline-block;vertical-align: top;">
+						<img src="http://checklist.evolutionet.cl/img/emails/notes.png" alt="Silfa Logo" height="48" width="48" style="display: inline-block;vertical-align: top;">
 						<p style="display: inline-block;vertical-align: top;margin:.1em 0 0 0;width: 85%;">
 							{{ $mensaje }}
 						</p>
