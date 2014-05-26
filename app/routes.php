@@ -20,6 +20,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::get('/', 'SiteController@getDashboard');
     Route::get('ingresar', 'SiteController@getSelectForm');
     Route::post('ingresar', 'SiteController@loadChecklist');
+    Route::get('reportes', 'SiteController@getSelectReport');
+    Route::get('reportes/{id}', 'SiteController@getReport');
 
     /**
     * Rutas que son response de algun AJAX , tambien deben pasar por el filtro de acceso de usuario
@@ -50,3 +52,5 @@ Route::group(array('before' => 'auth'), function(){
 Route::when('/','access');
 Route::when('ingresar','access:/ingresar');
 Route::when('ingresar/*','access:/ingresar');
+Route::when('reportes','access:/reportes');
+Route::when('reportes/*','access:/reportes');

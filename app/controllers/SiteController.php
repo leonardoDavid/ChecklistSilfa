@@ -10,13 +10,12 @@ class SiteController extends BaseController {
 	|
 	*/
     public function getDashboard(){
-    	$MoreMenu = $this->_getMenu();
         $users = Usuario::where('estado','=','1')->count();
         $tiendas = Tienda::where('estado','=','1')->count();
         $reportes = ChecklistRepo::where('estado','=','1')->count();
     	return View::make('Sitio.dashboard',array(
     		'MainMenu' => View::make('Menu.MainMenu',array(
-    			'MoreMenu' => $MoreMenu
+    			'MoreMenu' => $this->_getMenu()
     		)),
             'Reportes' => $reportes,
             'Users' => $users,
@@ -24,17 +23,105 @@ class SiteController extends BaseController {
     	));
     }
     public function getSelectForm(){
-    	$MoreMenu = $this->_getMenu();
     	$Areas = $this->_getAreas();
     	$Tiendas = $this->_getTiendas();
 
     	return View::make('Sitio.SelectForm',array(
     		'MainMenu' => View::make('Menu.MainMenu',array(
-    			'MoreMenu' => $MoreMenu
+    			'MoreMenu' => $this->_getMenu()
     		)),
     		'Areas'    => $Areas,
     		'Tiendas'    => $Tiendas
     	));
+    }
+    public function getSelectReport(){
+        $areas = $tiendas = $sucursales = $usuarios = "";
+        $area = AreaType::where('estado','=','1')->get()->toArray();
+        $tienda = Tienda::where('estado','=','1')->get()->toArray();
+        $usuario = Usuario::where('estado','=','1')->get()->toArray();
+
+        foreach ($area as $tmp){
+            $areas .= "<option value=".$tmp['id'].">".$tmp['nombre']."</option>";
+        }
+
+        foreach ($tienda as $tmp){
+            $tiendas .= "<option value=".$tmp['id'].">".$tmp['nombre']."</option>";
+        }
+
+        foreach ($usuario as $tmp){
+            $usuarios .= "<option value=".$tmp['id'].">".$tmp['nombre']." ".$tmp['ape_paterno']."</option>";
+        }       
+
+        $pages = $this->_listCheck();
+        return View::make('Sitio.SelectReport',array(
+            'MainMenu' => View::make('Menu.MainMenu',array(
+                'MoreMenu' => $this->_getMenu()
+            )),
+            'AreaOptions' => $areas,
+            'LocalOptions' => $tiendas,
+            'UserOptions' => $usuarios,
+            'checklists' => $pages['files'],
+            'links' => $pages['links']
+        ));
+    }
+    public function getReport($id){
+        try{
+            $idChecklist = Crypt::decrypt($id);
+        }
+        catch(Exception $e){
+            return Redirect::to('/reportes')->with('error-report',"Reporte no encontrado");
+        }
+        $info = ChecklistRepo::infoReport($idChecklist)->get();
+        $created = explode(" ",$info[0]->created_at);
+        $fecha = explode("-", $created[0]);
+
+        $form = ChecklistDetalle::details($idChecklist)->get();
+        $questions = "";
+        $god = $wrong = $all = 0;
+        foreach ($form as $question){
+            if( ($question->tipo == "checkbox" && $question->respuesta == "1") || ($question->tipo == "text" && $question->respuesta != "") ){
+                if($question->tipo == "checkbox" && $question->respuesta == "1")
+                    $valor = "checked";
+                else if($question->tipo == "text" && $question->respuesta != "")
+                    $valor = $question->respuesta;
+                else
+                    $valor = "";
+                $god++;
+            }
+            else{
+                $wrong++;
+                $valor = "";
+            }
+            if($question->comentario != "")
+                $clase = "has-comment";
+            else 
+                $clase = "";
+            $questions .= View::make('Forms.Result',array(
+                'Type' => $question->tipo,
+                'ID' => md5($question->id.date("Ymdhis")),
+                'Pregunta' => $question->texto,
+                'CheckID' => md5($question->texto.date("Ymd")),
+                'Comentario' => $question->comentario,
+                'Value' => $valor,
+                'HasComment' => $clase
+            ));
+            $all++;            
+
+        }
+
+        return View::make('Sitio.DetailReport',array(
+            'MainMenu' => View::make('Menu.MainMenu',array(
+                'MoreMenu' => $this->_getMenu()
+            )),
+            'IDReport' => $idChecklist,
+            'fechaIngreso' => $fecha[2]."-".$fecha[1]."-".$fecha[0],
+            'horaIngreso' => $created[1],
+            'evaluador' => $info[0]->user." ".$info[0]->last_name,
+            'area' => $info[0]->area,
+            'tienda' => $info[0]->local,
+            'sucursal' => $info[0]->sucursal,
+            'Form' => $questions
+        ));
     }
 
     /*
@@ -49,7 +136,24 @@ class SiteController extends BaseController {
     	$response = $tmp = "";
     	if(Request::ajax()){
     		$value = Input::get('tienda');
-    		if(is_numeric($value)){
+
+            $validations = Validator::make(
+                array(
+                    'tienda' => $value
+                ),
+                array(
+                    'tienda' => 'required|numeric'
+                )
+            );
+
+            if($validations->fails()){
+                $response = array(
+                    'status' => false,
+                    'motivo' => "La opción que selecciono no es valida",
+                    'codigo' => 101
+                );
+            }
+    		else{
 	    		$items = Tienda::find($value)->sucursales;
 	    		foreach ($items as $item){
 		    		$tmp .= "<option value='".$item->id."'>".$item->nombre."</option>";
@@ -59,17 +163,11 @@ class SiteController extends BaseController {
 	    			'html'   => $tmp
 	    		);
 	    	}
-	    	else
-	    		$response = array(
-	    			'status' => false,
-	    			'motivo' => "La opción que selecciono no es valida",
-	    			'codigo' => 101
-	    		);
+	    	
     	}
     	return $response;
     }    
     public function loadChecklist(){
-    	$MoreMenu = $this->_getMenu();
     	$area = Input::get('area');
     	$tienda = Input::get('tienda');
     	$sucursal = Input::get('sucursal');
@@ -98,25 +196,12 @@ class SiteController extends BaseController {
     		$area = AreaType::find(Input::get('area'));
     		$tienda = Tienda::find(Input::get('tienda'));
     		$sucursal = SucursalPlace::find(Input::get('sucursal'));
-	    	$form = FormCheck::find(Input::get('area'))->preguntas;
 
-	    	$questions = "";
-	    	foreach ($form as $question){
-	    		if($question->id < 10)
-	    			$hash = "0".$question->id;
-	    		else
-	    			$hash = $question->id;
-	    		$questions .= View::make('Forms.Question',array(
-	    			'Type' => $question->tipo,
-	    			'ID' => $hash.md5($question->id.date("Ymdhis")),
-	    			'Pregunta' => $question->texto,
-	    			'CheckID' => md5($question->id.$question->texto.date("Ymd"))
-	    		));
-	    	}
+	    	$form = $this->_loadForm(Input::get('area'));
 
 	    	return View::make('Sitio.ChecklistForm',array(
 	    		'MainMenu' => View::make('Menu.MainMenu',array(
-	    			'MoreMenu' => $MoreMenu
+	    			'MoreMenu' => $this->_getMenu()
 	    		)),
 	    		'Area' => $area->nombre,
 	    		'AreaID' => $area->id,
@@ -124,22 +209,39 @@ class SiteController extends BaseController {
 	    		'TiendaID' => $tienda->id,
 	    		'Sucursal' => $sucursal->nombre,
 	    		'SucursalID' => $sucursal->id,
-	    		'Form' => $questions,
-	    		'Total' => count($form)
+	    		'Form' => $form['questions'],
+	    		'Total' => $form['count']
 	    	));
 	    }
     }
     public function saveChecklist(){
     	$datos = array();
-
     	if (Request::ajax()){
-
     		$datos = Input::get('valores');
     		$area = Input::get('area');
     		$sucursal = Input::get('sucursal');
 
-    		if(count($datos) > 0 && is_numeric($area) && is_numeric($sucursal)){
+            $validations = Validator::make(
+                array(
+                    'datos' => count($datos),
+                    'area'  => $area,
+                    'sucursal' => $sucursal
+                ),
+                array(
+                    'datos' => 'required|numeric|min:1',
+                    'area' => 'required|numeric',
+                    'sucursal' => 'required|numeric'
+                )
+            );
 
+            if($validations->fails()){
+                $response = array(
+                    'status' => false,
+                    'motivo' => "Error en la recepción de datos",
+                    'codigo' => 112
+                );
+            }
+    		else{
     			//Se crea un nuevo registro de checklist
     			$checklist = new ChecklistRepo;
     			$checklist->area_id = $area;
@@ -194,13 +296,7 @@ class SiteController extends BaseController {
                     );
 
                     $verifyEmail = $this->_sendEmail($datos);
-                    if($verifyEmail && $status){
-                        Session::push('save_success', 'Checklist guardado con éxito! (Se envio una copia a su correo)');
-                        $response = array(
-                            'status' => true
-                        );
-                    }
-    				else if($status){
+                    if($status){
     					Session::push('save_success', 'Checklist guardado con éxito !');
     					$response = array(
 		    				'status' => true
@@ -222,13 +318,6 @@ class SiteController extends BaseController {
 		    		);
     			}
     		}
-    		else{
-    			$response = array(
-	    			'status' => false,
-	    			'motivo' => "Error en la recepción de datos",
-	    			'codigo' => 112
-	    		);
-    		}
 	    		
     	}
     	else{
@@ -242,7 +331,6 @@ class SiteController extends BaseController {
     	return json_encode($response);
     }
     public function notifyBug(){
-
         if(Request::ajax()){
             $msj = Input::get('mensajes');
             $validations = Validator::make(
@@ -262,7 +350,7 @@ class SiteController extends BaseController {
                 
                 $response = array(
                     'status' => false,
-                    'motivo' => $errors,
+                    'motivos' => $errors,
                     'codigo' => 122
                 );
             }
@@ -280,7 +368,6 @@ class SiteController extends BaseController {
                         'subject' => 'Notificacion de Bug'
                     )
                 );
-
                 $response = array(
                     'status' => $this->_sendEmail($datos),
                     'motivo' => "Error en el envio",
@@ -337,8 +424,64 @@ class SiteController extends BaseController {
     	return $response;
     }
     private function _sendEmail($datos){
-        return Mail::queue($datos['template'], $datos['info'] , function($message) use($datos) {
-            $message->to($datos['receptor']['email'], $datos['receptor']['name'])->subject($datos['receptor']['subject']);
-        });
+        try{
+            Mail::queue($datos['template'], $datos['info'] , function($message) use($datos) {
+                $message->to($datos['receptor']['email'], $datos['receptor']['name'])->subject($datos['receptor']['subject']);
+            });
+            return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
+    private function _listCheck($data = null){
+        $files = "";
+        if(is_null($data)){
+            $list = ChecklistRepo::reports()->paginate(5);
+            foreach ($list as $row){
+                //Sacando la fecha
+                $fecha = explode(" ", $row->created_at);
+                $fecha = explode("-", $fecha[0]);
+                $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+
+                $files .= "<tr data-location='/reportes/".Crypt::encrypt($row->id)."'>";
+                $files .= "<td>".$row->area."</td>";
+                $files .= "<td>".$row->local."</td>";
+                $files .= "<td>".$row->sucursal."</td>";
+                $files .= "<td>".$row->user."</td>";
+                $files .= "<td>".$fecha."</td>";
+                $files .= "</tr>";
+            }
+        }
+        $response = array(
+            'files' => $files,
+            'links' => $list->links()
+        );
+        return $response;
+    }
+    private function _loadForm($area){
+        $form = FormCheck::find($area)->preguntas;
+
+        $questions = "";
+        foreach ($form as $question){
+            if($question->id < 10)
+                $hash = "0".$question->id;
+            else
+                $hash = $question->id;
+            $questions .= View::make('Forms.Question',array(
+                'Type' => $question->tipo,
+                'ID' => $hash.md5($question->id.date("Ymdhis")),
+                'Pregunta' => $question->texto,
+                'CheckID' => md5($question->id.$question->texto.date("Ymd"))
+            ));
+        }
+
+        return array(
+            'questions' => $questions,
+            'count' => count($form)
+        );
+    }
+    private function _restoreForm($idChecklist){
+
     }
 }

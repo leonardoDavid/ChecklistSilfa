@@ -68,7 +68,16 @@ Route::filter('guest', function(){
 Route::filter('csrf', function() {
    	$token = Request::ajax() ? Request::header('X-CSRF-Token') : Input::get('_token');
    	if (Session::token() != $token) {
-      	throw new Illuminate\Session\TokenMismatchException;
+      	if(Request::ajax()){
+      		return array(
+      			'status' => false,
+      			'motivo' => "Error del Token",
+      			'codigo' => 504
+      		);
+      	}
+      	else{
+      		return Redirect::to('/login')->with('error_login', 'El token ha cambiado');
+      	}
    	}
 });
 

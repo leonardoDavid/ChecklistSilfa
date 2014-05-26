@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('title')
-	Checklist - Sistema de Checklist
+	Reportes - Sistema de Checklist
 @stop
 
 @section('menu')
@@ -10,54 +10,76 @@
 
 @section('contenido')
     <section class="container site">
-		
-		@if(Session::has('save_success'))
+		@if(Session::has('error-report'))
 		<div class="row">
-        	<div class="col-xs-12 col-md-12 alert alert-dismissable alert-success">
+        	<div class="col-xs-12 col-md-12 alert alert-dismissable alert-danger">
 	            <button type="button" class="close" data-dismiss="alert">×</button>
-	            <?php $val = Session::get('save_success') ?>
-            	<strong>Yeah! </strong> {{ $val[0] }}
+            	<strong>Woou! </strong> {{ Session::get('error-report') }}
         	</div>
         </div>
-        @endif        
-		
-		<h1 class="title-page">Ingreso de Checklist</h1>
+        @endif  
+		<h1 class="title-page">Reportes</h1>
 
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header">
 				<span class="icon-menu show-menu"></span>
+				<span class="icon-excel show-menu-left-second" id="export"></span>
 				<span class="icon-question-circle show-menu-left" id="help"></span>
+			</div>
+		</div>	
+
+		<div class="row filters center">
+			<div class="col-xs-12">
+				<span>Area</span>
+				<span>Tienda</span>
+				<span>Sucursal</span>
+				<span>Supervisor</span>
+			</div>
+			<div class="col-xs-12">
+				<select id="area" class="form-control">
+					<option value="0">Todas</option>
+					{{ $AreaOptions }}
+				</select>
+
+				<select id="tienda" class="form-control">
+					<option value="0">Todas</option>
+					{{ $LocalOptions }}
+				</select>
+
+				<select id="sucursal" class="form-control" disabled>
+					<option value="0">Todas</option>
+				</select>
+
+				<select id="user" class="form-control">
+					<option value="0">Todos</option>
+					{{ $UserOptions }}
+				</select>
+			</div>
+			<div class="col-xs-12 center space-bottom">
+				<button class="btn btn-info">
+					Filtrar
+					<span class="icon-filter"></span>
+				</button>
 			</div>
 		</div>
 
-		<form action="/ingresar" method="post" id="select-checklist">
-			<div class="container-input">
-				<label for="area" class="col-xs-12 label-control">Area</label>
-				<select name="area" id="area" class="form-control">
-					<option value="0">Seleccione un Area</option>
-					{{ $Areas }}
-				</select>
-			</div>
+		<table class="table table-hover table-local">
+		  	<thead>
+			    <tr>
+			      	<th>Area</th>
+			      	<th>Tienda</th>
+			      	<th>Sucursal</th>
+			      	<th>Supervisor</th>
+			      	<th>Fecha</th>
+		    	</tr>
+		  	</thead>
+		  	<tbody>
+		  		{{ $checklists }}
+		  	</tbody>
+		</table>
 
-			<div class="container-input">
-				<label for="tienda" class="col-xs-12 label-control">Tienda</label>
-				<select name="tienda" id="tienda" class="form-control">
-					<option value="0">Seleccione una Tienda</option>
-					{{ $Tiendas }}
-				</select>
-			</div>
-
-			<div class="container-input">
-				<label for="sucursal" class="col-xs-12 label-control">Sucursal</label>
-				<select name="sucursal" id="sucursal" class="form-control" disabled>
-					<option value="0">Seleccione una Sucursal</option>
-					
-				</select>
-			</div>
-		</form>
-
-		<div class="center">
-			<button class="btn btn-primary" id="begin" disabled>¡Empezar!</button>
+		<div class="row center">
+			{{ $links }}
 		</div>
 
         <!-- Modales -->
@@ -69,12 +91,11 @@
                         <h4 class="modal-title">¿Cómo funciona? - Checklist Silfa</h4>
                     </div>
                     <div class="modal-body">
-                        <h4>¡Es muy facil!</h4>
                         <p>
-                        	Solo debe seleccionar los datos que se presentan, indique que area desea evaluar, en que tienda y en que sucursal de dicha tienda se va realizar el checklist.
+                        	Con los filtro que se encuentran en el encabezado puede seleccionar de manera detallada los checklist que desea ver, una vez seleccionados puede exportar la lista resultante, o seleccionar un checklist especifico y ver los detalles del seleccionado.
                         </p>
                         <p>
-                        	Una vez seleccionado los campos, presione en el boton <cite>Empezar</cite> y cargara automaticamente el formulario correspondiente al area que selecciono.
+                        	Todo es exportable a excel, y los documentos se envian al correo que tiene registrado dentro del sistema.
                         </p>
                     </div>
                 </div>
@@ -99,6 +120,25 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="type-report" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Checklist Silfa</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                        	Que datos desea exportar?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                    	<button class="btn btn-info" id="all-export">Todo el Reporte</button>
+                    	<button class="btn btn-info" id="only-page">Solo esta Página</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 		<div class="overlay-disabled"></div>
     </section>
@@ -109,8 +149,7 @@
 		$('#how-work').modal();
 	});
 	$('#tienda').change(function(event) {
-		$('#sucursal').html('<option value="0">Seleccione una Sucursal</option>');
-		$('#begin').attr('disabled', true);
+		$('#sucursal').html('<option value="0">Todas</option>');
 		$('#sucursal').attr('disabled', true);
 		if($('#tienda').val() != '0'){
 			$('.loading-box').text('Cargando ...');
@@ -119,14 +158,13 @@
 	            type: 'post',
 	            url: '/ingresar/tienda',
 	            data: {	tienda:$('#tienda').val() },
-	            success: function (response) {
+	            success: function (response){
 	            	log = response;
 	            	$('.loading-box').fadeOut();
 	                if(response['status']){
-	                	$('#sucursal').html('<option value="0">Seleccione una Sucursal</option>');
+	                	$('#sucursal').html('<option value="0">Todas</option>');
 	                	$('#sucursal').append(response['html']);
 						$('#sucursal').attr('disabled', false);
-						$('#begin').attr('disabled', false);
 	                }
 	                else{
 	                	$('#error-motivo').text(response['motivo']);
@@ -147,52 +185,26 @@
 	        });
 	    }
 	});
-	$('#sucursal').change(function(event) {
-		if($(this).val() > 0){
-			$('#begin').attr('disabled', false);
+	$('#export').click(function(event) {
+		if($('ul.pagination').length > 0){
+			$('#type-report').modal();
 		}
 		else{
-			$('#begin').attr('disabled', true);
+			alert("Llamada para exportar");
 		}
 	});
-	$('#begin').click(function(event) {
-		var status = true;
-		var msj = "";
-		if($('#area').val() == 0){
-			msj = msj + "<li>Area</li>"
-			status = false;			
-		}
-		if($('#tienda').val() == 0){
-			msj = msj + "<li>Tienda</li>"
-			status = false;			
-		}
-		if($('#sucursal').val() == 0){
-			msj = msj + "<li>Sucursal</li>"
-			status = false;
-		}
-		if(status){
-			$('#select-checklist').submit();
-		}
-		else{
-			$('#unfields').html(msj);
-			$('#error-client').modal();
-		}
+	$('#all-export').click(function(){
+		$('#type-report').modal('hide');
 	});
-	@if (Session::has('resquest_error'))
-		(function(){
-			var errors = {{ Session::get('resquest_error') }};
-			var msj_errors = "";
-			for(var x = 0;x < errors.length; x++){
-				msj_errors = msj_errors + "<li>"+errors[x]+"</li>";
-			}
-			$('#unfields-valid').html(msj_errors);
-			$('#error-valid').modal();
-		})();
-	@endif
-	@if (Session::has('save_success'))
+	$('#only-page').click(function(){
+		$('#type-report').modal('hide');
+	});
+	$('tr').click(function(){
+		window.location = $(this).data('location');
+	});
+	@if (Session::has('error-report'))
 		setTimeout(function() {
             $('.alert').slideUp();
         }, 3000);
-        <?php Session::forget('save_success', '0'); ?>
 	@endif
 @stop

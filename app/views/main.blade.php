@@ -30,7 +30,45 @@
 		<!-- Contenido -->
 	    @yield('contenido')
 
-        <!-- Modal de Bug -->
+        <!-- Modal de Bug -->        
+        <div class="modal fade" id="error-server" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Checklist Silfa</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <strong>Woou!</strong> Ha ocurrido un error mientras se realizaba la petición, los detalles del error son:
+                            <ul>
+                                <li>Motivo: <span id="error-motivo"></span></li>
+                                <li>Codigo: <span id="error-codigo"></span></li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="error-client" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Checklist Silfa</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <strong>Woou!</strong> Esto es extraño, pero no reconocemos un valor para los siguientes campos:
+                            <ul id="unfields"></ul>
+                        </p>
+                        <p>
+                            Te recomendamos revisar estos campos, si estan seteados por favor envianos un feed/reclamo, puedes realizar la acción desde el menu.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="bug-detected" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -109,7 +147,7 @@
                         }
                         else{
                             $('.loading-box').fadeOut();
-                            if(response['motivo'].length > 0){
+                            if( ('motivos' in response) && response['motivos'].length > 0){
                                 var msjErrors = "<ul>";
                                 for (var i = 0; i < response['motivo'].length; i++) {
                                     msjErrors = msjErrors + "<li>" + response['motivo'][i] + "</li>";                                
@@ -125,6 +163,7 @@
                     },
                     error : function(xhr){
                         log = xhr;
+                        console.log("MyError!");
                         $('.loading-box').fadeOut();
                         if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
                             $('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');

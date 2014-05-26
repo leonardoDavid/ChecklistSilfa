@@ -215,6 +215,9 @@
     border-bottom: 1px solid #C4C4C4;
     padding-bottom: 0.2em;
 }
+.space-bottom{
+    margin-bottom: 2em !important;
+}
 
 /*NavBar Menu*/
 .menu{
@@ -276,7 +279,7 @@
 .navbar.active{
     left: 65%;
 }
-.show-menu,.show-menu-left{
+.show-menu,.show-menu-left,.show-menu-left-second{
     font-size: 2.5em;
     top: .15em;
     left: 0.25em;
@@ -298,6 +301,10 @@
 }
 .show-menu-left{
     right: 1.2em;
+    left: initial;
+}
+.show-menu-left-second{
+    right: 2.4em;
     left: initial;
 }
 #need-data{
@@ -471,4 +478,28 @@
 }
 .statics-local{
     background: #5BC0DE;
+}
+
+/*Reportes*/
+.filters select,
+.filters span{
+    width: 24%;
+    display: inline-block;
+}
+.filters div{
+    margin-bottom: 0.5em;
+}
+.table-local > thead > tr > th,
+.table-local > tbody > tr > th,
+.table-local > tfoot > tr > th,
+.table-local > thead > tr > td,
+.table-local > tbody > tr > td,
+.table-local > tfoot > tr > td{
+    vertical-align: middle;
+}
+.table-local tr{
+    cursor: pointer;
+}
+.has-comment{
+    color: #AACA6F;
 }

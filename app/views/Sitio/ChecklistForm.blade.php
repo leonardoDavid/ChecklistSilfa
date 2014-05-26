@@ -42,44 +42,6 @@
 		</div>
 
         <!-- Modales -->
-        <div class="modal fade" id="error-server" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Checklist Silfa</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                        	<strong>Woou!</strong> Ha ocurrido un error mientras se realizaba la petición, los detalles del error son:
-                        	<ul>
-                        		<li>Motivo: <span id="error-motivo"></span></li>
-                        		<li>Codigo: <span id="error-codigo"></span></li>
-                        	</ul>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="error-client" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Checklist Silfa</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                        	<strong>Woou!</strong> Esto es extraño, pero no reconocemos un valor para los siguientes campos:
-                        	<ul id="unfields"></ul>
-                        </p>
-                        <p>
-                        	Te recomendamos revisar estos campos, si estan seteados por favor envianos un feed/reclamo, puedes realizar la acción desde el menu.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="modal fade" id="question-comment" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
