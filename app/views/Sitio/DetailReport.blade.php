@@ -23,17 +23,25 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<ul class="list-unstyled">
-				<li><span><strong>ID Checklist: </strong>#{{ $IDReport }}</span></li>
-				<li><span><strong>Fecha de Ingreso: </strong>{{ $fechaIngreso }}</span></li>
-				<li><span><strong>Hora de Ingreso: </strong>{{ $horaIngreso }}</span></li>
-				<li><span><strong>Evaluador: </strong>{{ $evaluador }}</span></li>
-				<li><span><strong>Área: </strong>{{ $area }}</span></li>
-				<li><span><strong>Tienda: </strong>{{ $tienda }}</span></li>
-				<li><span><strong>Sucursal: </strong>{{ $sucursal }}</span></li>
-				</ul>
+					<li><span><strong>ID Checklist: </strong>#{{ $IDReport }}</span></li>
+					<li><span><strong>Fecha de Ingreso: </strong>{{ $fechaIngreso }}</span></li>
+					<li><span><strong>Hora de Ingreso: </strong>{{ $horaIngreso }}</span></li>
+					<li><span><strong>Evaluador: </strong>{{ $evaluador }}</span></li>
+					<li><span><strong>Área: </strong>{{ $area }}</span></li>
+					<li><span><strong>Tienda: </strong>{{ $tienda }}</span></li>
+					<li><span><strong>Sucursal: </strong>{{ $sucursal }}</span></li>
+				</ul>	
+				<div class="calificate">
+					<span class="icon-certificate icon-back"></span>
+					<span class="icon-certificate"></span>
+					<span class="icon-bookmark"></span>
+					<span class="text">{{ $Porcent }}%</span>
+				</div>
 			</div>
 		</div>
 		{{ $Form }}
+
+		<textarea id="comment.final" class="form-control comment-final" disabled>{{ $comentario }}</textarea>
 
         <!-- Modales -->
         <div class="modal fade" id="how-work">

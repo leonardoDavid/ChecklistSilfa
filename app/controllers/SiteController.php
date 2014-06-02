@@ -52,7 +52,9 @@ class SiteController extends BaseController {
             $usuarios .= "<option value=".$tmp['id'].">".$tmp['nombre']." ".$tmp['ape_paterno']."</option>";
         }       
 
-        $pages = $this->_listCheck();
+        $filters = Input::get('filters',null);
+        $pages = $this->_listCheck($filters);
+
         return View::make('Sitio.SelectReport',array(
             'MainMenu' => View::make('Menu.MainMenu',array(
                 'MoreMenu' => $this->_getMenu()
@@ -86,10 +88,12 @@ class SiteController extends BaseController {
                     $valor = $question->respuesta;
                 else
                     $valor = "";
-                $god++;
+                if($question->isContable == 1)
+                    $god++;
             }
             else{
-                $wrong++;
+                if($question->isContable == 1)
+                    $wrong++;
                 $valor = "";
             }
             if($question->comentario != "")
@@ -105,8 +109,8 @@ class SiteController extends BaseController {
                 'Value' => $valor,
                 'HasComment' => $clase
             ));
-            $all++;            
-
+            if($question->isContable == 1)
+                $all++;
         }
 
         return View::make('Sitio.DetailReport',array(
@@ -120,7 +124,9 @@ class SiteController extends BaseController {
             'area' => $info[0]->area,
             'tienda' => $info[0]->local,
             'sucursal' => $info[0]->sucursal,
-            'Form' => $questions
+            'Form' => $questions,
+            'comentario' => $info[0]->comentario,
+            'Porcent' => round((100*$god)/$all)
         ));
     }
 
@@ -434,25 +440,28 @@ class SiteController extends BaseController {
             return false;
         }
     }
-    private function _listCheck($data = null){
+    private function _listCheck($filters = null){
         $files = "";
-        if(is_null($data)){
+        if(is_null($filters))
             $list = ChecklistRepo::reports()->paginate(5);
-            foreach ($list as $row){
-                //Sacando la fecha
-                $fecha = explode(" ", $row->created_at);
-                $fecha = explode("-", $fecha[0]);
-                $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+        else
+            $list = ChecklistRepo::reports()->paginate(5);
 
-                $files .= "<tr data-location='/reportes/".Crypt::encrypt($row->id)."'>";
-                $files .= "<td>".$row->area."</td>";
-                $files .= "<td>".$row->local."</td>";
-                $files .= "<td>".$row->sucursal."</td>";
-                $files .= "<td>".$row->user."</td>";
-                $files .= "<td>".$fecha."</td>";
-                $files .= "</tr>";
-            }
+        foreach ($list as $row){
+            //Sacando la fecha
+            $fecha = explode(" ", $row->created_at);
+            $fecha = explode("-", $fecha[0]);
+            $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+
+            $files .= "<tr data-location='/reportes/".Crypt::encrypt($row->id)."'>";
+            $files .= "<td>".$row->area."</td>";
+            $files .= "<td>".$row->local."</td>";
+            $files .= "<td>".$row->sucursal."</td>";
+            $files .= "<td>".$row->user."</td>";
+            $files .= "<td>".$fecha."</td>";
+            $files .= "</tr>";
         }
+
         $response = array(
             'files' => $files,
             'links' => $list->links()
@@ -463,6 +472,7 @@ class SiteController extends BaseController {
         $form = FormCheck::find($area)->preguntas;
 
         $questions = "";
+        $count = 0;
         foreach ($form as $question){
             if($question->id < 10)
                 $hash = "0".$question->id;
@@ -472,13 +482,16 @@ class SiteController extends BaseController {
                 'Type' => $question->tipo,
                 'ID' => $hash.md5($question->id.date("Ymdhis")),
                 'Pregunta' => $question->texto,
+                'contable' => $question->isContable,
                 'CheckID' => md5($question->id.$question->texto.date("Ymd"))
             ));
+            if($question->isContable == 1)
+                $count++;
         }
 
         return array(
             'questions' => $questions,
-            'count' => count($form)
+            'count' => $count
         );
     }
     private function _restoreForm($idChecklist){

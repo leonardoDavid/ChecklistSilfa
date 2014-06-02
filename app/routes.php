@@ -21,6 +21,7 @@ Route::group(array('before' => 'auth'), function(){
     Route::get('ingresar', 'SiteController@getSelectForm');
     Route::post('ingresar', 'SiteController@loadChecklist');
     Route::get('reportes', 'SiteController@getSelectReport');
+    Route::post('reportes', 'SiteController@getSelectReport');
     Route::get('reportes/{id}', 'SiteController@getReport');
 
     /**

@@ -89,13 +89,12 @@
                     </div>
                     <div class="modal-body">
                         <p>
-                            <strong>Woou! </strong> Aún no completas un 70% minimo de aprovación, esto puede repercutir en tu evaluación de desemeño final
-                            , ¿Realmente deseas enviar el checklist?
+                            <strong>Atención! </strong> Checklist bajo el mínimo de un 70% de aprobación para el PDV (punto de venta), ¿Deseas cancelar el envío y realizar alguna gestión extra?
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="send-complete">Si, enviar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">NO! CANCELAR!! :(</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="send-complete">Si, gestionar</button>
+                        <button type="button" class="btn btn-danger" id="cancel-send">NO! CANCELAR!! :(</button>
                     </div>
                 </div>
             </div>
@@ -124,7 +123,7 @@
     function refreshPorcent(){
         tmp = $("input:checked").length;
         $("input[type='text']").each(function(index, el) {
-            if($(this).val().trim() != "")
+            if($(this).val().trim() != "" && $(this).data('contable') == 1)
                 tmp++;
         });
         space = (Math.round(100/total)+1)*tmp;
@@ -220,9 +219,8 @@
         $('#sure').modal();
     });
 
-    $('#send-complete').click(function(){
-        $('#not-complete').modal('hide');
-        sendData();
+    $('#cancel-send').click(function(){
+        window.location = "/ingresar";
     });
 
     $('#cancel-sure').click(function(){

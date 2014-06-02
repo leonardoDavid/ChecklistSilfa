@@ -56,7 +56,7 @@
 				</select>
 			</div>
 			<div class="col-xs-12 center space-bottom">
-				<button class="btn btn-info">
+				<button class="btn btn-info" id="filter">
 					Filtrar
 					<span class="icon-filter"></span>
 				</button>
@@ -201,6 +201,16 @@
 	});
 	$('tr').click(function(){
 		window.location = $(this).data('location');
+	});
+	$('#filter').click(function(event) {
+		var filters = {
+			'area' : $('#area').val(),
+			'tienda' : $('#tienda').val(),
+			'sucursal' : $('#sucursal').val(),
+			'user' : $('#user').val()
+		};
+		var url = "/reportes/"
+		$.redirectWithPost(url, filters);
 	});
 	@if (Session::has('error-report'))
 		setTimeout(function() {

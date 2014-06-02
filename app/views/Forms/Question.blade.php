@@ -1,4 +1,4 @@
-<div class="question-container" id="{{ $ID }}" data-type="{{ $Type }}" data-comment="">
+<div class="question-container" id="{{ $ID }}" data-type="{{ $Type }}" data-comment="" data-contable="{{ $contable }}">
     <div class="question-text">{{ $Pregunta }}</div>
     @if ($Type == "checkbox")
         <div class="question-check-container">
