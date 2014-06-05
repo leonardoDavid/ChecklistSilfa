@@ -15,8 +15,8 @@ class User extends Migration {
 		Schema::create('user',function($tabla){
 			$tabla->increments('id')->unique();
 			$tabla->string('rut',10);
-			$tabla->string('email',80);
-			$tabla->string('username',80);
+			$tabla->string('email',150);
+			$tabla->string('username',50);
 			$tabla->string('password',200);
 			$tabla->string('nombre',80);
 			$tabla->string('ape_paterno',80);

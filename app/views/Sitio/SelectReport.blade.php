@@ -209,7 +209,7 @@
 			'sucursal' : $('#sucursal').val(),
 			'user' : $('#user').val()
 		};
-		var url = "/reportes/"
+		var url = "/reportes"
 		$.redirectWithPost(url, filters);
 	});
 	@if (Session::has('error-report'))

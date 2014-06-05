@@ -16,7 +16,6 @@ class PreguntasFormulario extends Migration {
 			$tabla->increments('id')->unique();
 			$tabla->integer('pregunta_id');
 			$tabla->integer('formulario_id');
-			$tabla->integer('orden');
 			$tabla->timestamps();
 		});
 	}

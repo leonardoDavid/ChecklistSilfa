@@ -40,20 +40,37 @@ class SiteController extends BaseController {
         $tienda = Tienda::where('estado','=','1')->get()->toArray();
         $usuario = Usuario::where('estado','=','1')->get()->toArray();
 
-        foreach ($area as $tmp){
-            $areas .= "<option value=".$tmp['id'].">".$tmp['nombre']."</option>";
-        }
-
-        foreach ($tienda as $tmp){
-            $tiendas .= "<option value=".$tmp['id'].">".$tmp['nombre']."</option>";
-        }
-
-        foreach ($usuario as $tmp){
-            $usuarios .= "<option value=".$tmp['id'].">".$tmp['nombre']." ".$tmp['ape_paterno']."</option>";
-        }       
-
-        $filters = Input::get('filters',null);
+        //Extrallendo filtros si es que existen
+        $filters = $this->_getFiltersReport();
+        //Consultando registros filtrado
         $pages = $this->_listCheck($filters);
+        
+        //Recorriendo areas
+        foreach ($area as $tmp){
+            $selected = "";
+            //Verifico si selecciono este valor en el filtro
+            if(is_array($filters) && array_key_exists('area', $filters) && $tmp['id'] == $filters['area'])
+                $selected = "selected";
+            $areas .= "<option value=".$tmp['id']." ".$selected.">".$tmp['nombre']."</option>";
+        }
+
+        //Recorriendo las tiendas/locales
+        foreach ($tienda as $tmp){
+            $selected = "";
+            //Verifico si selecciono este valor en el filtro
+            if(is_array($filters) && array_key_exists('tienda', $filters) && $tmp['id'] == $filters['tienda'])
+                $selected = "selected";
+            $tiendas .= "<option value=".$tmp['id']." ".$selected.">".$tmp['nombre']."</option>";
+        }
+
+        //Recorriendo los usuarios
+        foreach ($usuario as $tmp){
+            $selected = "";
+            //Verifico si selecciono este valor en el filtro
+            if(is_array($filters) && array_key_exists('user', $filters) && $tmp['id'] == $filters['user'])
+                $selected = "selected";
+            $usuarios .= "<option value=".$tmp['id']." ".$selected.">".$tmp['nombre']." ".$tmp['ape_paterno']."</option>";
+        }       
 
         return View::make('Sitio.SelectReport',array(
             'MainMenu' => View::make('Menu.MainMenu',array(
@@ -68,15 +85,19 @@ class SiteController extends BaseController {
     }
     public function getReport($id){
         try{
+            //Desemcriptamos el parametro
             $idChecklist = Crypt::decrypt($id);
         }
         catch(Exception $e){
+            //Si falla la desenciptacion retorno a los reportes con errores
             return Redirect::to('/reportes')->with('error-report',"Reporte no encontrado");
         }
+        //Extrallendo info del checklist seleccionado
         $info = ChecklistRepo::infoReport($idChecklist)->get();
         $created = explode(" ",$info[0]->created_at);
         $fecha = explode("-", $created[0]);
 
+        //Extrac del detalle del checklist
         $form = ChecklistDetalle::details($idChecklist)->get();
         $questions = "";
         $god = $wrong = $all = 0;
@@ -140,6 +161,7 @@ class SiteController extends BaseController {
 	*/
     public function ajaxSucursales(){
     	$response = $tmp = "";
+        //Verifia que la peticion sea Ajax (HttpRequstXML o algo asi)
     	if(Request::ajax()){
     		$value = Input::get('tienda');
 
@@ -222,6 +244,7 @@ class SiteController extends BaseController {
     }
     public function saveChecklist(){
     	$datos = array();
+        //Validamos que sea ajax
     	if (Request::ajax()){
     		$datos = Input::get('valores');
     		$area = Input::get('area');
@@ -256,6 +279,7 @@ class SiteController extends BaseController {
     			$checklist->comentario = Input::get('final-comment');
     			$checklist->estado = 1;
     			try{
+                    //Guardando registro
     				$checklist->save();
     				$status = true;
     			}
@@ -280,6 +304,7 @@ class SiteController extends BaseController {
 	    					$ides .= $resp->id."#";
 	    				}	
 	    				catch(Exception $e){
+                            //Aqui debiese enviarme un mail indicando la excepcion, viene en una prox entrega - comming soon xD
 	    					$status = false;
 	    					break;
 	    				}
@@ -403,6 +428,7 @@ class SiteController extends BaseController {
 	*/
     private function _getMenu(){
     	$response = "";
+        //Consulto los menus a los cuales el usuario logeado tiene acceso
     	$items = Usuario::find(Auth::user()->id)->menus;
     	foreach ($items as $item){
     		$response .= View::make('Menu.Item',array(
@@ -443,9 +469,11 @@ class SiteController extends BaseController {
     private function _listCheck($filters = null){
         $files = "";
         if(is_null($filters))
+            //Si no se enviaron filtros
             $list = ChecklistRepo::reports()->paginate(5);
         else
-            $list = ChecklistRepo::reports()->paginate(5);
+            //Si se enviaron filtro
+            $list = ChecklistRepo::reports($filters)->paginate(5);
 
         foreach ($list as $row){
             //Sacando la fecha
@@ -453,6 +481,7 @@ class SiteController extends BaseController {
             $fecha = explode("-", $fecha[0]);
             $fecha = $fecha[2]."-".$fecha[1]."-".$fecha[0];
 
+            //Creando la fila del reporte, se ecripta el id del checklist para luego hacerlo link (se envia con javascript)
             $files .= "<tr data-location='/reportes/".Crypt::encrypt($row->id)."'>";
             $files .= "<td>".$row->area."</td>";
             $files .= "<td>".$row->local."</td>";
@@ -469,6 +498,7 @@ class SiteController extends BaseController {
         return $response;
     }
     private function _loadForm($area){
+        //Trae las preguntas de cierta area
         $form = FormCheck::find($area)->preguntas;
 
         $questions = "";
@@ -494,7 +524,24 @@ class SiteController extends BaseController {
             'count' => $count
         );
     }
-    private function _restoreForm($idChecklist){
+    private function _getFiltersReport(){
+        //Evalua los filtros que vengan en un request post
+        $filters = null;
 
+        $area = Input::get('area',null);
+        $user = Input::get('user',null);
+        $tienda = Input::get('tienda',null);
+        $sucursal = Input::get('sucursal',null);
+
+        if($area != 0)
+            $filters['area'] = $area;
+        if($user != 0)
+            $filters['user'] = $user;
+        if($tienda != 0)
+            $filters['tienda'] = $tienda;
+        if($sucursal != 0)
+            $filters['sucursal'] = $sucursal;
+
+        return $filters;
     }
 }

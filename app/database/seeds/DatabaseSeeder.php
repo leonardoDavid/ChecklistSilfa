@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
+		//Llamada a los archivos que se deben correr para poblar la DB
 		Eloquent::unguard();
 		$this->call('UserTableSeeder');
 		$this->call('AreaTableSeeder');

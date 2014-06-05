@@ -5,6 +5,7 @@ $.extend({
         $.each( args, function( key, value ) {
             form += '<input type="hidden" name="'+key+'" value="'+value+'">';
         });
-        $('<form action="' + location + '" method="POST">' + form + '</form>').submit();
+        log = $('<form action="' + location + '" method="POST">' + form + '</form>');
+        log.submit(); 
     }
 });

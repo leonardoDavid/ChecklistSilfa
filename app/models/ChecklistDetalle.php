@@ -4,6 +4,7 @@ class ChecklistDetalle extends Eloquent{
 	protected $table = 'detalle_checklist';
 	protected $primaryKey = 'id';
 
+	//Realiza una query con join entre el checklist y las preguntas para traer sus respuestas
 	public function scopeDetails($query,$id){
 		return $query->where('checklist_id','=',$id)
 					->join('preguntas','preguntas.id','=','detalle_checklist.preguntas_form_id')

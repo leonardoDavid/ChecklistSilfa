@@ -92,7 +92,6 @@ Route::filter('csrf', function() {
 |
 */
 Route::filter('access',function($route,$request,$url = '/'){
-	//dd($url);
 	if(Auth::guest()){
 		return Redirect::to('/login');
 	}

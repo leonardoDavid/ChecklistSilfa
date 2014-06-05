@@ -16,6 +16,7 @@ class Preguntas extends Migration {
 			$tabla->increments('id')->unique();
 			$tabla->text('texto');
 			$tabla->string('tipo');
+			$tabla->integer('isContable');
 			$tabla->integer('estado');
 			$tabla->timestamps();
 		});
