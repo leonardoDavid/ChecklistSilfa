@@ -14,9 +14,10 @@ class PreguntasFormulario extends Migration {
 	public function up(){
 		Schema::create('preguntas_formulario',function($tabla){
 			$tabla->increments('id')->unique();
-			$tabla->integer('pregunta_id');
-			$tabla->integer('formulario_id');
-			$tabla->timestamps();
+			$tabla->integer('pregunta_id')->unsigned();
+			$tabla->integer('formulario_id')->unsigned();
+			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
+			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});
 	}
 

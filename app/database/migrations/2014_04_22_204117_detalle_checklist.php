@@ -14,12 +14,13 @@ class DetalleChecklist extends Migration {
 	public function up(){
 		Schema::create('detalle_checklist',function($tabla){
 			$tabla->increments('id')->unique();
-			$tabla->integer('checklist_id');
-			$tabla->integer('preguntas_form_id');
+			$tabla->integer('checklist_id')->unsigned();
+			$tabla->integer('preguntas_form_id')->unsigned();
 			$tabla->string('respuesta');
 			$tabla->text('comentario')->nullable();
-			$tabla->integer('estado');
-			$tabla->timestamps();
+			$tabla->integer('estado')->unsigned();
+			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
+			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});
 	}
 

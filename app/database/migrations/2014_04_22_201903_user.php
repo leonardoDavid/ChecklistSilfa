@@ -21,11 +21,12 @@ class User extends Migration {
 			$tabla->string('nombre',80);
 			$tabla->string('ape_paterno',80);
 			$tabla->string('ape_materno',80)->nullable();
-			$tabla->integer('tel_movil')->nullable();
-			$tabla->integer('tel_fijo')->nullable();
-			$tabla->integer('estado');
+			$tabla->integer('tel_movil')->nullable()->unsigned();
+			$tabla->integer('tel_fijo')->nullable()->unsigned();
+			$tabla->integer('estado')->unsigned();
 			$tabla->string('remember_token');
-			$tabla->timestamps();
+			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
+			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});
 	}
 

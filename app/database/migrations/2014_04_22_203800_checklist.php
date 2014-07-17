@@ -14,12 +14,13 @@ class Checklist extends Migration {
 	public function up(){
 		Schema::create('checklist',function($tabla){
 			$tabla->increments('id')->unique();
-			$tabla->integer('area_id');
-			$tabla->integer('sucursal_id');
-			$tabla->integer('user_id');
+			$tabla->integer('area_id')->unsigned();
+			$tabla->integer('sucursal_id')->unsigned();
+			$tabla->integer('user_id')->unsigned();
 			$tabla->text('comentario')->nullable();
-			$tabla->integer('estado');
-			$tabla->timestamps();
+			$tabla->integer('estado')->unsigned();
+			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
+			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});
 	}
 

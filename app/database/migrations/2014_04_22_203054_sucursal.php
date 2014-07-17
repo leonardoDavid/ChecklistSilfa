@@ -13,11 +13,12 @@ class Sucursal extends Migration {
 	public function up(){
 		Schema::create('sucursal',function($tabla){
 			$tabla->increments('id')->unique();
-			$tabla->integer('local_id');
+			$tabla->integer('local_id')->unsigned();
 			$tabla->string('nombre',100);
 			$tabla->string('direccion',200)->nullable();
-			$tabla->integer('estado');
-			$tabla->timestamps();
+			$tabla->integer('estado')->unsigned();
+			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
+			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});
 	}
 

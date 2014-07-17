@@ -17,8 +17,9 @@ class Menu extends Migration {
 			$tabla->string('nombre');
 			$tabla->string('url');
 			$tabla->string('icon');
-			$tabla->integer('estado');
-			$tabla->timestamps();
+			$tabla->integer('estado')->unsigned();
+			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
+			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});
 	}
 
