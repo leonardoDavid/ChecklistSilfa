@@ -122,6 +122,16 @@
                     $('#bug-detected').modal();
                 }, 300);
             });
+            $('a').click(function(event) {
+                if($(this).attr('href') != "#"){
+                    var tmpURL = $(this).attr('href');
+                    event.preventDefault();
+                    $('.overlay-loading').fadeIn();
+                    setTimeout(function() {
+                        window.location = tmpURL;
+                    }, 800);
+                }
+            });
             @yield('scripts')
         });
 
