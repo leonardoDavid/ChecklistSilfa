@@ -92,7 +92,7 @@
                     </div>
                     <div class="modal-body">
                         <p>
-                        	Con los filtro que se encuentran en el encabezado puede seleccionar de manera detallada los checklist que desea ver, una vez seleccionados puede exportar la lista resultante, o seleccionar un checklist especifico y ver los detalles del seleccionado.
+                        	Con los filtros que se encuentran en el encabezado puede seleccionar de manera detallada los checklist que desea ver, una vez seleccionados puede exportar la lista resultante, o seleccionar un checklist especifico y ver los detalles del seleccionado.
                         </p>
                         <p>
                         	Todo es exportable a excel, y los documentos se envian al correo que tiene registrado dentro del sistema.
@@ -190,7 +190,18 @@
 			$('#type-report').modal();
 		}
 		else{
-			alert("Llamada para exportar");
+			var data = new Array();
+			$('tbody tr').each(function(index, el) {
+				log = this;
+				data[index] = {
+					'area' : $($(this).children()[0]).data('area'),
+					'tienda' : $($(this).children()[1]).data('tienda'),
+					'sucursal' : $($(this).children()[2]).data('sucursal'),
+					'supervisor' : $($(this).children()[3]).data('user'),
+					'fecha' : $($(this).children()[4]).data('fecha')
+				};
+			});
+			console.log(data);
 		}
 	});
 	$('#all-export').click(function(){

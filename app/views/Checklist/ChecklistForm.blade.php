@@ -123,7 +123,7 @@
     function refreshPorcent(){
         tmp = $("input:checked").length;
         $("input[type='text']").each(function(index, el) {
-            if($(this).val().trim() != "" && $(this).data('contable') == 1)
+            if($(this).val().trim() != "" && $(this).parent().parent().data('contable') == 1)
                 tmp++;
         });
         space = (Math.round(100/total)+1)*tmp;

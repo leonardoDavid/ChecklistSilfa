@@ -1,13 +1,24 @@
-<?php
-class ChecklistRepo extends Eloquent{
+<?php namespace ChecklistSilfa\Repositories;
 
-	protected $table = 'checklist';
-	protected $primaryKey = 'id';
+use ChecklistSilfa\Entities\ChecklistDetalle;
+use ChecklistSilfa\Entities\Checklist;
 
-    //Query encargada de traer los checklist segun sea el filtro
-	public function scopeReports($query,$filters = array()){
-		//Creando wheres
-		$query->where('checklist.estado','=','1');
+class ChecklistRepo{
+	
+	/*
+    |--------------------------------------------------------------------------
+    | Funciones Comunes
+    |--------------------------------------------------------------------------
+    |
+    | Estas funciones son reutilizables por todos los metodos del controlador
+    | que requieran informacion con respecto al modelo de checklistDetalle, que 
+    | corresponde al detalle de los checklist o la lista genera de ellos que es
+    | el modelo de Checklist.
+    |
+    */
+
+	public static function reports($filters = array()){
+		$query = Checklist::where('checklist.estado','=','1');
         if(array_key_exists('area', $filters) && !is_null($filters['area']))
         	$query->where('checklist.area_id','=',$filters['area']);
 
@@ -20,7 +31,6 @@ class ChecklistRepo extends Eloquent{
         if(array_key_exists('user', $filters) && !is_null($filters['user']))
         	$query->where('checklist.user_id','=',$filters['user']);
 
-        //Termino y retorno de la consulta
         return $query->join('area','area.id','=','checklist.area_id')
 			->join('sucursal','sucursal.id','=','checklist.sucursal_id')
     		->join('local','local.id','=','sucursal.local_id')
@@ -28,13 +38,23 @@ class ChecklistRepo extends Eloquent{
         	->select('area.nombre as area','sucursal.nombre as sucursal','local.nombre as local','user.nombre as user','checklist.created_at as created_at','checklist.id as id');
 	}
 
-    //Trae un registro de un checklist, recibe el id para consultarlo
-	public function scopeInfoReport($query,$id){
-		return $query->where('checklist.id','=',$id)
+	public static function infoReport($id){
+		return Checklist::where('checklist.id','=',$id)
 					->join('area','area.id','=','checklist.area_id')
 					->join('sucursal','sucursal.id','=','checklist.sucursal_id')
             		->join('local','local.id','=','sucursal.local_id')
             		->join('user','user.id','=','checklist.user_id')
             		->select('area.nombre as area','sucursal.nombre as sucursal','local.nombre as local','user.nombre as user','user.ape_paterno as last_name','checklist.created_at as created_at','area.id as area_id','checklist.comentario as comentario');
 	}
+
+	public static function details($id){
+		return ChecklistDetalle::where('checklist_id','=',$id)
+					->join('preguntas','preguntas.id','=','detalle_checklist.preguntas_form_id')
+					->select('preguntas.texto as texto','preguntas.tipo as tipo','preguntas.isContable as isContable','detalle_checklist.respuesta as respuesta','detalle_checklist.comentario as comentario','detalle_checklist.id as id');
+	}
+
+    public static function count(){
+        return Checklist::where('estado','=','1')->count();
+    }
+
 }

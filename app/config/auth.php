@@ -28,7 +28,7 @@ return array(
 	|
 	*/
 
-	'model' => 'Usuario',
+	'model' => 'ChecklistSilfa\Entities\Usuario',
 
 	/*
 	|--------------------------------------------------------------------------

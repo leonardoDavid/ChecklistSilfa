@@ -1,4 +1,7 @@
 <?php
+
+use ChecklistSilfa\Libraries\Util;
+
 class ProfileController extends BaseController {
 
 	/*
@@ -11,34 +14,11 @@ class ProfileController extends BaseController {
 	|
 	*/
 	public function getProfile(){
-		$MoreMenu = $this->_getMenu();
     	return View::make('Perfil.dashboard',array(
     		'MainMenu' => View::make('Menu.MainMenu',array(
-    			'MoreMenu' => $MoreMenu
+    			'MoreMenu' => Util::getMenu()
     		))
     	));
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Funciones Privadas
-	|--------------------------------------------------------------------------
-	|
-	| Estas funciones son privadas y propias del Contralador, como lo son
-	| obtner los items de un menu, etc
-	|
-	*/
-    private function _getMenu(){
-    	$response = "";
-    	$items = Usuario::find(Auth::user()->id)->menus;
-    	foreach ($items as $item){
-    		$response .= View::make('Menu.Item',array(
-    			'url' => $item->url,
-    			'icon' => $item->icon,
-    			'name' => $item->nombre
-    		));
-    	}
-    	return $response;
-    }
 
 }

@@ -91,6 +91,9 @@ Route::filter('csrf', function() {
 | a traves de los valores asignados de la tabla menu
 |
 */
+use ChecklistSilfa\Entities\MainMenu;
+use ChecklistSilfa\Entities\Permisos;
+
 Route::filter('access',function($route,$request,$url = '/'){
 	if(Auth::guest()){
 		return Redirect::to('/login');

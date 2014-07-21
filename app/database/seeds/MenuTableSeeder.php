@@ -1,8 +1,7 @@
 <?php
 
-/**
-* Agregamos los menus que tambien sirven como acciones/permisos
-*/
+use ChecklistSilfa\Entities\MainMenu;
+
 class MenuTableSeeder extends Seeder{
     public function run(){
         MainMenu::create(array(

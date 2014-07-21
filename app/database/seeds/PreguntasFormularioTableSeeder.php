@@ -1,8 +1,7 @@
 <?php
 
-/**
-* Agregamos detalles de Preguntas Formulario
-*/
+use ChecklistSilfa\Entities\PreguntaFormulario;
+
 class PreguntasFormularioTableSeeder extends Seeder {
     public function run(){
         //Formulario de jugueteria

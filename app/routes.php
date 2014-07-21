@@ -12,31 +12,22 @@
 Route::get('login', 'AuthController@showLogin');
 Route::post('login', array('before' => 'csrf', 'uses' => 'AuthController@postLogin'));
 
-//Solo accesibles con login previo
 Route::group(array('before' => 'auth'), function(){
-	/**
-	* Previas a un filtro de acceso por usuario
-	*/
     Route::get('/', 'SiteController@getDashboard');
-    Route::get('ingresar', 'SiteController@getSelectForm');
-    Route::post('ingresar', 'SiteController@loadChecklist');
-    Route::any('reportes', 'SiteController@getSelectReport');
-    Route::get('reportes/{id}', 'SiteController@getReport');
+    Route::get('logout', 'AuthController@logOut');
+    
+    Route::get('ingresar', 'ChecklistController@getSelectForm');
+    Route::post('ingresar', 'ChecklistController@loadChecklist');
+    Route::post('ingresar/tienda', 'ChecklistController@getSelectSucusales');
+    Route::post('ingresar/save-checklist', array('before' => 'csrf', 'uses' => 'ChecklistController@saveChecklist') );
 
-    /**
-    * Rutas que son response de algun AJAX , tambien deben pasar por el filtro de acceso de usuario
-    */
-    Route::post('ingresar/tienda', 'SiteController@ajaxSucursales');
-    Route::post('ingresar/save-checklist', array('before' => 'csrf', 'uses' => 'SiteController@saveChecklist') );
+    Route::any('reportes', 'ReportesController@getSelectReport');
+    Route::get('reportes/{id}', 'ReportesController@getReport');
+
     Route::post('send-bug','SiteController@notifyBug');
 
-    /**
-    * Rutas sin filtro de usuario, solo login
-    */    
     Route::get('perfil','ProfileController@getProfile');
 
-    //Ruta para Cerrar la Sesion del user
-    Route::get('logout', 'AuthController@logOut');
 
 });
 

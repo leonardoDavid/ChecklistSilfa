@@ -1,11 +1,11 @@
 <?php
 
-/**
-* Agregamos los formularios para las areas
-*/
+use ChecklistSilfa\Entities\Area;
+use ChecklistSilfa\Entities\FormCheck;
+
 class FormsTableSeeder extends Seeder {
     public function run(){
-        $areas = AreaType::all();
+        $areas = Area::all();
 
         foreach ($areas as $area){
         	FormCheck::create(array(

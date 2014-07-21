@@ -1,8 +1,7 @@
 <?php
 
-/**
-* Agregamos las pregnutas de los checklist
-*/
+use ChecklistSilfa\Entities\Pregunta;
+
 class PreguntasTableSeeder extends Seeder{
     public function run(){
         Pregunta::create(array(
@@ -89,7 +88,6 @@ class PreguntasTableSeeder extends Seeder{
             'isContable' => 1,
 			'estado' => 1
         ));
-
         Pregunta::create(array(
             'texto' => "Tipo de Exhibidores",
             'isContable' => 1,
