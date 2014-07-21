@@ -198,10 +198,41 @@
 					'tienda' : $($(this).children()[1]).data('tienda'),
 					'sucursal' : $($(this).children()[2]).data('sucursal'),
 					'supervisor' : $($(this).children()[3]).data('user'),
-					'fecha' : $($(this).children()[4]).data('fecha')
+					'fecha' : $($(this).children()[4]).data('fecha'),
+					'ruta' : $(this).data('location')
 				};
 			});
-			console.log(data);
+			$('.loading-box').text('Exportando ...');
+			$('.loading-box').fadeIn();
+			$.ajax({
+	            type: 'post',
+	            url: '/reportes/exportar/lista',
+	            data: {	'datos' : data },
+	            success: function (response){
+	            	$('.loading-box').fadeOut();
+	                if(response['status']){
+	                	$('.loading-box').html('<span class="icon-check"><span> Enviado');
+                        setTimeout(function() {
+                            $('.loading-box').fadeOut();
+                        }, 3000);
+	                }
+	                else{
+	                	$('#error-motivo').text(response['motivo']);
+	                	$('#error-codigo').text(response['codigo']);
+	                	$('#error-server').modal();
+	                }
+	            },
+	            error: function(xhr,errors){
+	            	log = xhr;
+	            	$('.loading-box').fadeOut();
+	            	if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
+	                	$('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
+	                else if(xhr.status == 404)
+	                	$('#error-motivo').text('Error del servidor :(');
+	                $('#error-codigo').text(xhr.status);
+	                $('#error-server').modal();
+	            }
+	        });
 		}
 	});
 	$('#all-export').click(function(){

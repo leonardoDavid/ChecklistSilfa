@@ -15,7 +15,7 @@ class ChecklistManager{
     | Manager de Checklist
     |--------------------------------------------------------------------------
     |
-    | Estas funciones son ituliozadas para agregar un nuevo checklist
+    | Estas funciones son ituliozadas para agregar o actulizar un checklist
     |
     */
     public static function save(){
@@ -119,6 +119,8 @@ class ChecklistManager{
                 );
             }
         }
+
+        return $response;
     }
 
 }

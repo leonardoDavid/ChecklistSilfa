@@ -126,6 +126,33 @@ class ReportesController extends BaseController {
         ));
     }
 
+    public function exportReport($action,$id = null){
+        switch ($action) {
+            case 'lista':
+                if(Input::has('datos')){
+                    $datos = Input::get('datos');
+                    $datos['ext'] = 'csv';
+                    $datos['model'] = 'lista';
+                    $response = $this->generateFileReport($datos);
+                }
+                else{
+                    $response = array(
+                        'status' => false,
+                        'motivo' => "No se enviaron datos para exportar"
+                    );
+                }
+                break;
+            case 'id':
+                # code...
+                break;
+            case 'all':
+                # code...
+                break;
+        }
+
+        return $response;
+    }
+
     /*
 	|--------------------------------------------------------------------------
 	| Funciones Privadas
@@ -151,7 +178,7 @@ class ReportesController extends BaseController {
                 $files .= "<td data-area='".$row->area."'>".$row->area."</td>";
                 $files .= "<td data-tienda='".$row->local."'>".$row->local."</td>";
                 $files .= "<td data-sucursal='".$row->sucursal."'>".$row->sucursal."</td>";
-                $files .= "<td data-user='".$row->user."'>".$row->user."</td>";
+                $files .= "<td data-user='".$row->user." ".$row->apellido."'>".$row->user." ".$row->apellido."</td>";
                 $files .= "<td data-fecha='".$fecha."'>".$fecha."</td>";
                 $files .= "</tr>";
             }
@@ -184,6 +211,95 @@ class ReportesController extends BaseController {
             $filters['sucursal'] = $sucursal;
 
         return $filters;
+    }
+
+    public function getFileReport($hashName){
+        $fileName = Crypt::decrypt($hashName);
+        $fileLocation = app_path().'/ChecklistSilfa/Files/Reports/'.$fileName.".csv";
+        if(file_exists($fileLocation)){
+            $resource = finfo_open(FILEINFO_MIME_TYPE);
+            $type = finfo_file($resource , $fileLocation);
+            finfo_close($resource);
+
+            $partes = explode('.', $fileLocation);
+            $total = count($partes);
+            $ext = ($total > 0) ? $partes[$total -1] : 'txt';
+
+            $headers = array(
+                'Content-Type' => $type,
+                'Content-Disposition' => 'attachment; filename=reporte.'.$ext,
+            );
+            return Response::make(readfile($fileLocation), 200, $headers);
+        }
+        else
+            return App::abort(404);
+    }
+
+    private function generateFileReport($data){
+        $response = array();
+        $headersCSV = array();
+
+        if($data['model'] == "lista"){
+            array_push($headersCSV, 'Area');
+            array_push($headersCSV, 'Tienda');
+            array_push($headersCSV, 'Sucursal');
+            array_push($headersCSV, 'Supervisor');
+            array_push($headersCSV, 'Fecha');
+            array_push($headersCSV, 'ID Checklist');
+        }
+
+        if(count($data) > 0){
+            try{
+                $fileName = date('d-m-Y_H:i:s')."_By-".Auth::user()->username."_".$data['model'];
+                $fileLocation = app_path().'/ChecklistSilfa/Files/Reports/'.$fileName.".csv";
+                $file = fopen( $fileLocation, 'w');
+                fputcsv($file, $headersCSV);
+
+                foreach ($data as $row){
+                    $tmp = array();
+                    if($data['model'] == "lista"){
+                        if(is_array($row)){
+                            array_push($tmp, $row['area']);
+                            array_push($tmp,$row['tienda']);
+                            array_push($tmp,$row['sucursal']);
+                            array_push($tmp,$row['supervisor']);
+                            array_push($tmp,$row['fecha']);
+                            $ruta = explode("/", $row['ruta']);
+                            array_push($tmp,Crypt::decrypt($ruta[2]));
+                        }
+                    }
+                    fputcsv($file, $tmp);
+                }
+                fclose($file);
+
+                switch ($data['model']) {
+                    case 'lista':
+                        $route = 'reportes';
+                        break;   
+                    default:
+                        $route = $data['model'];
+                        break;
+                }
+
+                $response = array(
+                    'status' => true
+                );
+            }catch(Exception $e){
+                $response = array(
+                    'status' => false,
+                    'motivo' => "Error al tratar de Generar el Reporte",
+                    'exception' => $e->getMessage()
+                );
+            }
+        }
+        else
+            $response = array(
+                'status' => false,
+                'motivo' => "No existen registros asociados",
+                'exception' => 'No Data Found'
+            );
+
+        return $response;
     }
 
 }

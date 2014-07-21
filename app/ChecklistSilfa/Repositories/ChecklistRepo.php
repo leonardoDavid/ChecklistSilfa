@@ -35,7 +35,7 @@ class ChecklistRepo{
 			->join('sucursal','sucursal.id','=','checklist.sucursal_id')
     		->join('local','local.id','=','sucursal.local_id')
     		->join('user','user.id','=','checklist.user_id')
-        	->select('area.nombre as area','sucursal.nombre as sucursal','local.nombre as local','user.nombre as user','checklist.created_at as created_at','checklist.id as id');
+        	->select('area.nombre as area','sucursal.nombre as sucursal','local.nombre as local','user.nombre as user','user.ape_paterno as apellido','checklist.created_at as created_at','checklist.id as id');
 	}
 
 	public static function infoReport($id){

@@ -232,7 +232,9 @@
     z-index: 6;
     position: absolute;
     -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
-    -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
+    -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in;
+    -webkit-box-shadow:inset -4px 0 8px 0 #4F4F4F;
+    box-shadow:inset -4px 0 8px 0 #4F4F4F;
 }
 .menu.active{
     left: 0%;
@@ -275,6 +277,8 @@
     z-index: 0;
     -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
     -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
+    box-shadow: 0 4px 10px 0 #8A8A8A;
+    -webkit-box-shadow: 0 4px 10px 0 #8A8A8A;
 }
 .navbar.active{
     left: 65%;
