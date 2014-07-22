@@ -142,6 +142,13 @@ class ReportesController extends BaseController {
                     );
                 }
                 break;
+            case 'filters':
+               	$filters = $this->_getFiltersReport();
+               	$list = (is_null($filters)) ? ChecklistRepo::reports()->get() : ChecklistRepo::reports($filters)->get();
+               	$list['model'] = 'checklist';
+               	$list['ext'] = 'csv';
+               	$response = $this->generateFileReport($list);
+               	break;
             case 'id':
                 # code...
                 break;
@@ -239,7 +246,7 @@ class ReportesController extends BaseController {
         $response = array();
         $headersCSV = array();
 
-        if($data['model'] == "lista"){
+        if($data['model'] == "lista" || $data['model'] == "checklist"){
             array_push($headersCSV, 'Area');
             array_push($headersCSV, 'Tienda');
             array_push($headersCSV, 'Sucursal');
@@ -268,21 +275,37 @@ class ReportesController extends BaseController {
                             array_push($tmp,Crypt::decrypt($ruta[2]));
                         }
                     }
+                    if($data['model'] == "checklist"){
+                    	if(is_object($row)){
+                    		array_push($tmp, $row->area);
+                            array_push($tmp,$row->local);
+                            array_push($tmp,$row->sucursal);
+                            array_push($tmp,ucwords($row->user)." ".ucwords($row->ape_paterno));
+                            array_push($tmp,$row->created_at);
+                            array_push($tmp,$row->id);
+                    	}
+                    }
+
                     fputcsv($file, $tmp);
                 }
                 fclose($file);
 
-                switch ($data['model']) {
-                    case 'lista':
-                        $route = 'reportes';
-                        break;   
-                    default:
-                        $route = $data['model'];
-                        break;
-                }
+                $datos = array(
+                    'template' => "emails.SendReport",
+                    'info' => array(
+                        'user' => Auth::user()->nombre." ".Auth::user()->ape_paterno
+                    ),
+                    'receptor' => array(
+                        'email' => Auth::user()->email,
+                        'name' => 'Sistema de Checklist',
+                        'subject' => 'Solicitud de Reporte'
+                    ),
+                    'reporte' => $fileLocation
+                );
 
                 $response = array(
-                    'status' => true
+                    'status' => Util::sendEmail($datos),
+                    'motivo' => "Error en el envio"
                 );
             }catch(Exception $e){
                 $response = array(

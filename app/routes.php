@@ -21,9 +21,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::post('ingresar/tienda', 'ChecklistController@getSelectSucusales');
     Route::post('ingresar/save-checklist', array('before' => 'csrf', 'uses' => 'ChecklistController@saveChecklist') );
 
-    Route::get('reportes', 'ReportesController@getSelectReport');
+    Route::any('reportes', 'ReportesController@getSelectReport');
     Route::get('reportes/{id}', 'ReportesController@getReport');
-    //lista - id/hash - all
     Route::post('reportes/exportar/{action}/{id?}', 'ReportesController@exportReport');
 
     Route::post('send-bug','SiteController@notifyBug');

@@ -148,6 +148,7 @@
 	$('#help').click(function(){
 		$('#how-work').modal();
 	});
+
 	$('#tienda').change(function(event) {
 		$('#sucursal').html('<option value="0">Todas</option>');
 		$('#sucursal').attr('disabled', true);
@@ -185,65 +186,66 @@
 	        });
 	    }
 	});
+
 	$('#export').click(function(event) {
 		if($('ul.pagination').length > 0){
 			$('#type-report').modal();
 		}
 		else{
-			var data = new Array();
-			$('tbody tr').each(function(index, el) {
-				log = this;
-				data[index] = {
-					'area' : $($(this).children()[0]).data('area'),
-					'tienda' : $($(this).children()[1]).data('tienda'),
-					'sucursal' : $($(this).children()[2]).data('sucursal'),
-					'supervisor' : $($(this).children()[3]).data('user'),
-					'fecha' : $($(this).children()[4]).data('fecha'),
-					'ruta' : $(this).data('location')
-				};
-			});
-			$('.loading-box').text('Exportando ...');
-			$('.loading-box').fadeIn();
-			$.ajax({
-	            type: 'post',
-	            url: '/reportes/exportar/lista',
-	            data: {	'datos' : data },
-	            success: function (response){
-	            	$('.loading-box').fadeOut();
-	                if(response['status']){
-	                	$('.loading-box').html('<span class="icon-check"><span> Enviado');
-                        setTimeout(function() {
-                            $('.loading-box').fadeOut();
-                        }, 3000);
-	                }
-	                else{
-	                	$('#error-motivo').text(response['motivo']);
-	                	$('#error-codigo').text(response['codigo']);
-	                	$('#error-server').modal();
-	                }
-	            },
-	            error: function(xhr,errors){
-	            	log = xhr;
-	            	$('.loading-box').fadeOut();
-	            	if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
-	                	$('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
-	                else if(xhr.status == 404)
-	                	$('#error-motivo').text('Error del servidor :(');
-	                $('#error-codigo').text(xhr.status);
-	                $('#error-server').modal();
-	            }
-	        });
+			exportOnlyThisPage();
 		}
 	});
+
 	$('#all-export').click(function(){
 		$('#type-report').modal('hide');
+		var filters = {
+			'area' : $('#area').val(),
+			'tienda' : $('#tienda').val(),
+			'sucursal' : $('#sucursal').val(),
+			'user' : $('#user').val()
+		};
+		$('.loading-box').text('Exportando ...');
+		$('.loading-box').fadeIn();
+		$.ajax({
+            type: 'post',
+            url: '/reportes/exportar/filters',
+            data: filters,
+            success: function (response){
+            	$('.loading-box').fadeOut();
+                if(response['status']){
+                	$('.loading-box').html('<span class="icon-check"><span> Enviado');
+                    setTimeout(function() {
+                        $('.loading-box').fadeOut();
+                    }, 3000);
+                }
+                else{
+                	$('#error-motivo').text(response['motivo']);
+                	$('#error-codigo').text(response['codigo']);
+                	$('#error-server').modal();
+                }
+            },
+            error: function(xhr,errors){
+            	log = xhr;
+            	$('.loading-box').fadeOut();
+            	if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
+                	$('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
+                else if(xhr.status == 404)
+                	$('#error-motivo').text('Error del servidor :(');
+                $('#error-codigo').text(xhr.status);
+                $('#error-server').modal();
+            }
+        });
 	});
+
 	$('#only-page').click(function(){
 		$('#type-report').modal('hide');
+		exportOnlyThisPage();
 	});
+
 	$('tr').click(function(){
 		window.location = $(this).data('location');
 	});
+
 	$('#filter').click(function(event) {
 		var filters = {
 			'area' : $('#area').val(),
@@ -254,6 +256,53 @@
 		var url = "/reportes"
 		$.redirectWithPost(url, filters);
 	});
+
+	function exportOnlyThisPage(){
+		var data = new Array();
+		$('tbody tr').each(function(index, el) {
+			log = this;
+			data[index] = {
+				'area' : $($(this).children()[0]).data('area'),
+				'tienda' : $($(this).children()[1]).data('tienda'),
+				'sucursal' : $($(this).children()[2]).data('sucursal'),
+				'supervisor' : $($(this).children()[3]).data('user'),
+				'fecha' : $($(this).children()[4]).data('fecha'),
+				'ruta' : $(this).data('location')
+			};
+		});
+		$('.loading-box').text('Exportando ...');
+		$('.loading-box').fadeIn();
+		$.ajax({
+            type: 'post',
+            url: '/reportes/exportar/lista',
+            data: {	'datos' : data },
+            success: function (response){
+            	$('.loading-box').fadeOut();
+                if(response['status']){
+                	$('.loading-box').html('<span class="icon-check"><span> Enviado');
+                    setTimeout(function() {
+                        $('.loading-box').fadeOut();
+                    }, 3000);
+                }
+                else{
+                	$('#error-motivo').text(response['motivo']);
+                	$('#error-codigo').text(response['codigo']);
+                	$('#error-server').modal();
+                }
+            },
+            error: function(xhr,errors){
+            	log = xhr;
+            	$('.loading-box').fadeOut();
+            	if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
+                	$('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
+                else if(xhr.status == 404)
+                	$('#error-motivo').text('Error del servidor :(');
+                $('#error-codigo').text(xhr.status);
+                $('#error-server').modal();
+            }
+        });
+	}
+
 	@if (Session::has('error-report'))
 		setTimeout(function() {
             $('.alert').slideUp();

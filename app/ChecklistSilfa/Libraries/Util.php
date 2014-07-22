@@ -89,6 +89,8 @@ class Util{
         try{
             Mail::queue($datos['template'], $datos['info'] , function($message) use($datos) {
                 $message->to($datos['receptor']['email'], $datos['receptor']['name'])->subject($datos['receptor']['subject']);
+                if(array_key_exists('reporte', $datos))
+                     $message->attach($datos['reporte']);
             });
             return true;
         }
