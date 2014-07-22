@@ -28,7 +28,7 @@ Route::group(array('before' => 'auth'), function(){
     Route::post('send-bug','SiteController@notifyBug');
 
     Route::get('perfil','ProfileController@getProfile');
-
+    Route::get('assets/{resource}/{typeOrName?}/{name?}','ResourceController@getResource');
 
 });
 

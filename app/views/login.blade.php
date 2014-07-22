@@ -72,7 +72,7 @@
                     </div>
                     {{ Form::submit('Enviar',$attributes = array(
                         'id' => 'submit-form',
-                        'class' => 'btn btn-info pull-right'
+                        'class' => 'btn btn-primary pull-right'
                     )) }}
                 </div>
                 {{ Form::close() }}

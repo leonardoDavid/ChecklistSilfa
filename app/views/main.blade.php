@@ -85,8 +85,8 @@
                         </div>                        
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-info" id="send-bug">Enviar</button>
-                        <button class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-info btn-sm" id="send-bug">Enviar</button>
+                        <button class="btn btn-danger btn-sm" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>

@@ -56,7 +56,7 @@
 				</select>
 			</div>
 			<div class="col-xs-12 center space-bottom">
-				<button class="btn btn-info" id="filter">
+				<button class="btn btn-info btn-sm" id="filter">
 					Filtrar
 					<span class="icon-filter"></span>
 				</button>
@@ -133,8 +133,8 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                    	<button class="btn btn-info" id="all-export">Todo el Reporte</button>
-                    	<button class="btn btn-info" id="only-page">Solo esta Página</button>
+                    	<button class="btn btn-primary btn-sm" id="all-export">Todo el Reporte</button>
+                    	<button class="btn btn-primary btn-sm" id="only-page">Solo esta Página</button>
                     </div>
                 </div>
             </div>

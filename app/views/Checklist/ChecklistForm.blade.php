@@ -38,7 +38,7 @@
 		</form>
 		<div class="center">
 			<button class="btn btn-danger" id="cancel-checklist">Cancelar</button>
-			<button class="btn btn-info" id="save-checklist">Enviar</button>
+			<button class="btn btn-primary" id="save-checklist">Enviar</button>
 		</div>
 
         <!-- Modales -->
@@ -56,7 +56,7 @@
                         <textarea id="text-comment" class="text-comment" placeholder="Deja tu comentario con respecto a este item"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="save-comment">Guardar</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="save-comment">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -74,8 +74,8 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="cancel-sure">Aceptar</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-sm" id="cancel-sure">Aceptar</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -93,8 +93,8 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="send-complete">Si, gestionar</button>
-                        <button type="button" class="btn btn-danger" id="cancel-send">NO! CANCELAR!! :(</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" id="send-complete">Si, gestionar</button>
+                        <button type="button" class="btn btn-danger btn-sm" id="cancel-send">Cancelar Envio</button>
                     </div>
                 </div>
             </div>

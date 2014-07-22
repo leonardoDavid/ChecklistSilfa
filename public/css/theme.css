@@ -156,7 +156,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: #5BC0DE;
+    background: #1F6C7F;
 }
 .main-contend{
     position: absolute;
@@ -221,7 +221,7 @@
 
 /*NavBar Menu*/
 .menu{
-    background: #5BC0DE;
+    background: #1F6C7F;
     display: inline-block;
     vertical-align: top;
     height: 100%;
@@ -235,6 +235,7 @@
     -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in;
     -webkit-box-shadow:inset -4px 0 8px 0 #4F4F4F;
     box-shadow:inset -4px 0 8px 0 #4F4F4F;
+    padding-bottom: 1em;
 }
 .menu.active{
     left: 0%;
@@ -292,7 +293,7 @@
     cursor: pointer;
 }
 .progress{
-    width: 82%;
+    width: 80%;
     position: absolute;
     left: 50px;
     top: 4px;
@@ -339,6 +340,33 @@
 ::-webkit-scrollbar-thumb:hover {  
     background-color: #aaa;  
 }
+.content-profile{
+    padding: 1em;
+    color: #eee;
+    background: #103640;
+    z-index: -3;
+}
+.content-profile p{
+    display: inline-block;
+    vertical-align: top;
+    padding: 1em 1em 0 1em;
+}
+.content-profile p strong{
+    display: block;
+}
+.content-profile .profile{
+    border-radius: 50%;
+    width: 70px;
+    overflow: hidden;
+    height: 70px;
+    display: inline-block;
+    -webkit-box-shadow: 0 0 8px 0 #212121;
+    box-shadow: 0 0 8px 0 #212121;
+}
+.content-profile .profile img{
+    width: 95px;
+    height: auto;
+}
 
 /*Form de Ingreso*/
 .label-control{
@@ -356,7 +384,7 @@
 }
 .question-text{
     display: inline-block;
-    width: 77%;
+    width: 75%;
     vertical-align: top;
 }
 
@@ -365,6 +393,7 @@
 .question-input-container{
     display: inline-block;
     width: 22%;
+    text-align: center;
     position: relative;
 }
 .question-check {
@@ -509,7 +538,7 @@
 }
 .calificate{
     position: absolute;
-    right: 1em;
+    right: 0em;
     top: -.5em;
     font-size: 2em;
 }

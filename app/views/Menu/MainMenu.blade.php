@@ -1,8 +1,13 @@
 <nav class="menu">
-	<figure class="logo">
-        <img src="/img/silfa.svg">
-        <figcaption>Checklist System</figcaption>
-    </figure>
+	<div class="content-profile">
+		<figure class="profile">
+	        <img src="/assets/images/profile">
+	    </figure>
+	    <p>
+	    	<strong>Hola</strong> 
+	    	<span class="name">{{ Auth::user()->username; }}</span>!
+	    </p>
+	</div>
 	<ul class="list-unstyled">
 		{{ $MoreMenu }}
 		<a href="/perfil">
@@ -24,4 +29,8 @@
 			</li>
 		</a>
 	</ul>
+	<figure class="logo">
+        <img src="/img/silfa.svg">
+        <figcaption>Checklist System</figcaption>
+    </figure>
 </nav>
