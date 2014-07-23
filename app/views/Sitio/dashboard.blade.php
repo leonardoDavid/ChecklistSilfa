@@ -35,7 +35,5 @@
             <span class="number">{{ $Tiendas }}</span>
             <span class="text">Tiendas</span>
         </div>
-
-		<div class="overlay-disabled"></div>
     </section>
 @stop

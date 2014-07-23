@@ -196,18 +196,19 @@
 }
 .overlay-disabled.active{
     opacity: 1;
-    left: 0%;
+    left: 65%;
+    position: fixed;
 }
 .overlay-disabled{
     background: rgba(0, 0, 0, 0.3);
-    position: fixed;
-    left: -100%;
+    position: relative;
+    left: 0;
     height: 100%;
     width: 100%;
     top: 0;
-    opacity: 0;
     cursor: pointer;
-    z-index: 5;
+    z-index: 6;
+    opacity: 0;
     -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
     -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
 }
@@ -340,7 +341,8 @@
 ::-webkit-scrollbar-thumb:hover {  
     background-color: #aaa;  
 }
-.content-profile{
+.content-profile,
+.content-profile-edit{
     padding: 1em;
     color: #eee;
     background: #103640;
@@ -354,6 +356,7 @@
 .content-profile p strong{
     display: block;
 }
+.content-profile-edit .profile,
 .content-profile .profile{
     border-radius: 50%;
     width: 70px;
@@ -363,6 +366,7 @@
     -webkit-box-shadow: 0 0 8px 0 #212121;
     box-shadow: 0 0 8px 0 #212121;
 }
+.content-profile-edit .profile img,
 .content-profile .profile img{
     width: 95px;
     height: auto;
@@ -569,4 +573,24 @@
     right: 1.7em;
     z-index: 3;
     top: 1.9em;
+}
+
+/*Perfil*/
+.label-profile{
+    position: relative;
+    top: -40px;
+    left: 0px;
+    padding-left: 26px;
+    background-color: #E7E7E7;
+    color: #333;
+}
+.content-profile-edit{
+    background: none;
+}
+.content-profile-edit .profile{
+    width: 150px;
+    height: 150px;
+}
+.content-profile-edit .profile img{
+    width: 200px;
 }

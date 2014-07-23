@@ -132,7 +132,7 @@ class ReportesController extends BaseController {
                 if(Input::has('datos')){
                     $datos = Input::get('datos');
                     $datos['ext'] = 'csv';
-                    $datos['model'] = 'lista';
+                    $datos['model'] = 'checklist-list';
                     $response = $this->generateFileReport($datos);
                 }
                 else{
@@ -145,15 +145,52 @@ class ReportesController extends BaseController {
             case 'filters':
                	$filters = $this->_getFiltersReport();
                	$list = (is_null($filters)) ? ChecklistRepo::reports()->get() : ChecklistRepo::reports($filters)->get();
-               	$list['model'] = 'checklist';
+               	$list['model'] = 'checklist-filters';
                	$list['ext'] = 'csv';
                	$response = $this->generateFileReport($list);
                	break;
             case 'id':
-                # code...
+                if(!is_null($id)){
+                    try{
+                        $idChecklist = Crypt::decrypt($id);
+                        $info = ChecklistRepo::infoReport($idChecklist)->get();
+                        $created = explode(" ",$info[0]->created_at);
+                        $fecha = explode("-", $created[0]);
+
+
+                        $data = ChecklistRepo::details($idChecklist)->get();
+
+                        $more['id'] = $idChecklist;
+                        $more['evaluador'] = $info[0]->user." ".$info[0]->last_name;
+                        $more['area'] = $info[0]->area;
+                        $more['horaIngreso'] = $created[1];
+                        $more['tienda'] = $info[0]->local;
+                        $more['sucursal'] = $info[0]->sucursal;
+                        $more['comentario'] = $info[0]->comentario;
+                        $more['model'] = 'checklist-details';
+                        $more['ext'] = 'csv';
+                        $more['fecha'] = $fecha[2]."-".$fecha[1]."-".$fecha[0];
+                        $response = $this->generateFileReport($data,$more);
+                    }
+                    catch(Exception $e){
+                        $response = array(
+                            'status' => false,
+                            'motivo' => 'ID de checklist no valido'
+                        );
+                    }
+                }
+                else{
+                    $response = array(
+                        'status' => false,
+                        'motivo' => 'No se recibio un ID de Checklist'
+                    );
+                }
                 break;
-            case 'all':
-                # code...
+            default:
+                $response = array(
+                    'status' => false,
+                    'motivo' => 'Accion no indicada'
+                );
                 break;
         }
 
@@ -242,52 +279,95 @@ class ReportesController extends BaseController {
             return App::abort(404);
     }
 
-    private function generateFileReport($data){
+    private function generateFileReport($data,$more = null){
         $response = array();
         $headersCSV = array();
 
-        if($data['model'] == "lista" || $data['model'] == "checklist"){
-            array_push($headersCSV, 'Area');
-            array_push($headersCSV, 'Tienda');
-            array_push($headersCSV, 'Sucursal');
-            array_push($headersCSV, 'Supervisor');
-            array_push($headersCSV, 'Fecha');
-            array_push($headersCSV, 'ID Checklist');
+        if(is_null($more)){
+            if($data['model'] == "checklist-list" || $data['model'] == "checklist-filters"){
+                array_push($headersCSV, 'Area');
+                array_push($headersCSV, 'Tienda');
+                array_push($headersCSV, 'Sucursal');
+                array_push($headersCSV, 'Supervisor');
+                array_push($headersCSV, 'Fecha');
+                array_push($headersCSV, 'ID Checklist');
+            }
         }
 
         if(count($data) > 0){
             try{
-                $fileName = date('d-m-Y_H:i:s')."_By-".Auth::user()->username."_".$data['model'];
+                $fileName = date('d-m-Y_H:i:s')."_By-".Auth::user()->username."_";
+                $fileName .= (!is_null($more) && $more['model'] == "checklist-details") ? $more['model'] : $data['model'];
                 $fileLocation = app_path().'/ChecklistSilfa/Files/Reports/'.$fileName.".csv";
                 $file = fopen( $fileLocation, 'w');
                 fputcsv($file, $headersCSV);
 
+                if(!is_null($more) && $more['model'] == "checklist-details"){
+                    fputcsv($file, array('ID Checklist',"#".$more['id']));
+                    fputcsv($file, array('Evaluador' , $more['evaluador']));
+                    fputcsv($file, array('Dia del Check' , $more['fecha']));
+                    fputcsv($file, array('Hora de Ingreso' , $more['horaIngreso']));
+                    fputcsv($file, array('Area' , $more['area']));
+                    fputcsv($file, array('Tienda' , $more['tienda']));
+                    fputcsv($file, array('Sucursal' , $more['sucursal']));
+                    fputcsv($file, array('Comentario General' , $more['comentario']));
+                    fputcsv($file, array('---','---','---'));
+                    fputcsv($file, array('Pregunta','Respuesta','Comentario'));
+                }
+
+                $god = $wrong = $all = 0;
                 foreach ($data as $row){
                     $tmp = array();
-                    if($data['model'] == "lista"){
-                        if(is_array($row)){
-                            array_push($tmp, $row['area']);
-                            array_push($tmp,$row['tienda']);
-                            array_push($tmp,$row['sucursal']);
-                            array_push($tmp,$row['supervisor']);
-                            array_push($tmp,$row['fecha']);
-                            $ruta = explode("/", $row['ruta']);
-                            array_push($tmp,Crypt::decrypt($ruta[2]));
+
+                    if(is_null($more)){
+                        if($data['model'] == "checklist-list"){
+                            if(is_array($row)){
+                                array_push($tmp, $row['area']);
+                                array_push($tmp,$row['tienda']);
+                                array_push($tmp,$row['sucursal']);
+                                array_push($tmp,$row['supervisor']);
+                                array_push($tmp,$row['fecha']);
+                                $ruta = explode("/", $row['ruta']);
+                                array_push($tmp,Crypt::decrypt($ruta[2]));
+                            }
+                        }
+                        if($data['model'] == "checklist-filters"){
+                        	if(is_object($row)){
+                        		array_push($tmp, $row->area);
+                                array_push($tmp,$row->local);
+                                array_push($tmp,$row->sucursal);
+                                array_push($tmp,ucwords($row->user)." ".ucwords($row->ape_paterno));
+                                array_push($tmp,$row->created_at);
+                                array_push($tmp,$row->id);
+                        	}
                         }
                     }
-                    if($data['model'] == "checklist"){
-                    	if(is_object($row)){
-                    		array_push($tmp, $row->area);
-                            array_push($tmp,$row->local);
-                            array_push($tmp,$row->sucursal);
-                            array_push($tmp,ucwords($row->user)." ".ucwords($row->ape_paterno));
-                            array_push($tmp,$row->created_at);
-                            array_push($tmp,$row->id);
-                    	}
+                    else{
+                        if($more['model'] == "checklist-details"){
+                            if( ($row->tipo == "checkbox" && $row->respuesta == "1") || ($row->tipo == "text" && $row->respuesta != "") ){
+                                if($row->isContable == 1)
+                                    $god++;
+                            }
+                            else{
+                                if($row->isContable == 1)
+                                    $wrong++;
+                            }
+                            array_push($tmp, $row->texto);
+                            array_push($tmp, $row->respuesta);
+                            array_push($tmp, $row->comentario);
+                            if($row->isContable == 1)
+                                $all++;
+                        }
                     }
 
                     fputcsv($file, $tmp);
                 }
+
+                if(!is_null($more) && $more['model'] == "checklist-details"){
+                    fputcsv($file, array('---','---','---'));
+                    fputcsv($file, array('Porcentaje Final' , round((100*$god)/$all)));
+                }
+
                 fclose($file);
 
                 $datos = array(
@@ -311,7 +391,7 @@ class ReportesController extends BaseController {
                 $response = array(
                     'status' => false,
                     'motivo' => "Error al tratar de Generar el Reporte",
-                    'exception' => $e->getMessage()
+                    'exception' => $e->getMessage().$e->getLine()
                 );
             }
         }

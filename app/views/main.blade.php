@@ -30,6 +30,7 @@
 		<!-- Contenido -->
 	    @yield('contenido')
 
+        <div class="overlay-disabled"></div>
         <!-- Modal de Bug -->        
         <div class="modal fade" id="error-server" data-backdrop="static">
             <div class="modal-dialog">

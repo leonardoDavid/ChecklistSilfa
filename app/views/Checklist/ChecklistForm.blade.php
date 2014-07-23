@@ -99,8 +99,6 @@
                 </div>
             </div>
         </div>
-
-		<div class="overlay-disabled"></div>
     </section>
 @stop
 

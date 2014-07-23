@@ -10,9 +10,7 @@
 
 @section('contenido')
     <section class="container site">
-		
 		<h1 class="title-page">Detalle del Checklist</h1>
-
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header">
 				<span class="icon-menu show-menu"></span>
@@ -35,7 +33,7 @@
 					<span class="icon-certificate icon-back"></span>
 					<span class="icon-certificate"></span>
 					<span class="icon-bookmark"></span>
-					<span class="text">{{ $Porcent }}%</span>
+					<span class="text" id="porcent">{{ $Porcent }}%</span>
 				</div>
 			</div>
 		</div>
@@ -44,24 +42,6 @@
 		<textarea id="comment.final" class="form-control comment-final" disabled>{{ $comentario }}</textarea>
 
         <!-- Modales -->
-        <div class="modal fade" id="how-work">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">¿Cómo funciona? - Checklist Silfa</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                        	Con los filtro que se encuentran en el encabezado puede seleccionar de manera detallada los checklist que desea ver, una vez seleccionados puede exportar la lista resultante, o seleccionar un checklist especifico y ver los detalles del seleccionado.
-                        </p>
-                        <p>
-                        	Todo es exportable a excel, y los documentos se envian al correo que tiene registrado dentro del sistema.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="modal fade" id="error-valid" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -100,8 +80,6 @@
                 </div>
             </div>
         </div>
-
-		<div class="overlay-disabled"></div>
     </section>
 @stop
 
@@ -111,4 +89,40 @@
 		$('#text-comment').text(comment);
 		$('#question-comment').modal();
 	});
+
+    $('#export').click(function(){
+        $('.loading-box').text('Exportando ...');
+        $('.loading-box').fadeIn();
+        var id = location.pathname.split('/');
+        id = id[2];
+        $.ajax({
+            type: 'post',
+            url: '/reportes/exportar/id/'+id,
+            success: function (response){
+                log = response;
+                if(response['status']){
+                    $('.loading-box').html('<span class="icon-check"><span> Enviado');
+                    setTimeout(function() {
+                        $('.loading-box').fadeOut();
+                    }, 3000);
+                }
+                else{
+                    $('#error-motivo').text(response['motivo']);
+                    $('#error-codigo').text(response['codigo']);
+                    $('#error-server').modal();
+                    $('.loading-box').fadeOut();
+                }
+            },
+            error: function(xhr,errors){
+                log = xhr;
+                $('.loading-box').fadeOut();
+                if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
+                    $('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
+                else if(xhr.status == 404)
+                    $('#error-motivo').text('Error del servidor :(');
+                $('#error-codigo').text(xhr.status);
+                $('#error-server').modal();
+            }
+        });
+    });
 @stop
