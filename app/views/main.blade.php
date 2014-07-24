@@ -123,8 +123,9 @@
                     $('#bug-detected').modal();
                 }, 300);
             });
-            $('a').click(function(event) {
-                if($(this).attr('href') != "#"){
+            $('a').click(function(event){
+                var url = $(this).attr('href');
+                if(url[0] != "#"){
                     var tmpURL = $(this).attr('href');
                     event.preventDefault();
                     $('.overlay-loading').fadeIn();

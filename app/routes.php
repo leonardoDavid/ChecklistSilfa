@@ -25,6 +25,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::get('reportes/{id}', 'ReportesController@getReport');
     Route::post('reportes/exportar/{action}/{id?}', 'ReportesController@exportReport');
 
+    Route::get('admin', 'AdminController@getDashboard');
+
     Route::post('send-bug','SiteController@notifyBug');
 
     Route::get('perfil','ProfileController@getProfile');

@@ -188,7 +188,7 @@
     display: none;
 }
 .container.disabled{
-    left: 65%;
+    left: 250px;
 }
 .site{
     margin-top: 45px;
@@ -196,7 +196,7 @@
 }
 .overlay-disabled.active{
     opacity: 1;
-    left: 65%;
+    left: 250px;
     position: fixed;
 }
 .overlay-disabled{
@@ -226,8 +226,8 @@
     display: inline-block;
     vertical-align: top;
     height: 100%;
-    width: 65%;
-    left: -66%;
+    width: 250px;
+    left: -251px;
     overflow-y:auto;
     overflow-x:hidden;
     z-index: 6;
@@ -283,7 +283,7 @@
     -webkit-box-shadow: 0 4px 10px 0 #8A8A8A;
 }
 .navbar.active{
-    left: 65%;
+    left: 250px;
 }
 .show-menu,.show-menu-left,.show-menu-left-second{
     font-size: 2.5em;
@@ -586,6 +586,7 @@
 }
 .content-profile-edit{
     background: none;
+    display: inline-block;
 }
 .content-profile-edit .profile{
     width: 150px;
@@ -593,4 +594,47 @@
 }
 .content-profile-edit .profile img{
     width: 200px;
+}
+.input-group{
+    margin-bottom: 0.5em;
+}
+.file-input-wrapper {
+    width: 150px;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    left: 18px;
+}
+.file-input-wrapper > input[type="file"]{
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+}
+.file-input-wrapper > button{
+    display: inline-block;
+    width: 150px;
+}
+.name-file{
+    font-size: 0.8em;
+    position: relative;
+    float: right;
+    max-width: 160px;
+}
+ul.list-check{
+    list-style: none;
+    padding-left: 0;
+    font-size: .85em;
+}
+ul.list-check li{
+    margin-bottom: 0.3em;
+}
+ul.list-check li:before{
+    content: "\f00c";
+    font-family: 'icon';
+    margin-right: 0.2em;
+}
+.label{
+    margin: 1em 0;
 }

@@ -38,10 +38,10 @@
                 <strong>Yeah! </strong> {{ Session::get('info_login') }}
             </div>
             @endif
-            <figure class="col-xs-12 logo">
+            <figure class="col-xs-12 col-md-4 logo center-block">
                 <img src="/img/silfa.svg">
             </figure>
-            <section class="col-xs-12 contenedor">
+            <section class="contenedor col-xs-12 center-block">
                 <h2>Sistema de Checklist</h2>
                 {{ Form::open(array('url' => '/login')) }}
                 <div class="input-login">
@@ -109,6 +109,7 @@
     <script src="/js/bootstrap.min.js"></script>
     <script>
         $(document).on('ready',function(){
+            var stat = 0;
             $("a").click(function(event) {
                 $("#forgot-password").modal();
             });
@@ -116,6 +117,18 @@
             setTimeout(function() {
                 $('.alert').slideUp();
             }, 3000);
+            $('form').submit(function(event){
+                if(stat == 0){
+                    event.preventDefault();
+                    console.log("cancelado ...");
+                    $('.overlay-loading').fadeIn(function(){
+                        stat = 1;
+                        setTimeout(function(){
+                            $('form').submit();
+                        }, 500);
+                    });
+                }
+            });
         });
     </script>
 </body>
