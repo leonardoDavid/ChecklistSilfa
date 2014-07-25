@@ -638,3 +638,10 @@ ul.list-check li:before{
 .label{
     margin: 1em 0;
 }
+
+@media screen and (min-width: 992px) {
+    .statics{
+        width: 33%;
+        display: inline-block;
+    }
+}

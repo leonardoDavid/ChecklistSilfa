@@ -47,7 +47,7 @@
         @endif
         
         <h1 class="title-page">Mi Perfil</h1>
-        {{ Form::open( array('url' => '/perfil','method' => 'post') ) }}
+        {{ Form::open( array('url' => '/perfil','method' => 'post','enctype' => 'multipart/form-data') ) }}
         <div class="row">
             <div class="col-xs-6">
                 <div class="content-profile-edit">
@@ -76,11 +76,11 @@
             <div class="col-xs-12">
                 <div class="input-group">
                     <span class="input-group-addon"><span class="icon-email"></span></span>
-                    <input type="text" id="email" class="form-control" placeholder="Correo Electronico" value="{{ Auth::user()->email }}">
+                    <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electronico" value="{{ Auth::user()->email }}">
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><span class="icon-lock"></span></span>
-                    <input type="password" id="password" class="form-control" placeholder="Contraseña">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña">
                 </div>
 
                 <div class="panel-group" id="moreInfo">
@@ -96,23 +96,23 @@
                             <div class="panel-body">
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="icon-user"></span></span>
-                                    <input type="text" id="name" class="form-control" placeholder="Nombres" value="{{ Auth::user()->nombre }}">
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Nombres" value="{{ Auth::user()->nombre }}">
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="icon-user"></span></span>
-                                    <input type="text" id="paterno" class="form-control" placeholder="Apellido Paterno" value="{{ Auth::user()->ape_paterno }}">
+                                    <input type="text" id="paterno" name="paterno" class="form-control" placeholder="Apellido Paterno" value="{{ Auth::user()->ape_paterno }}">
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="icon-user"></span></span>
-                                    <input type="text" id="paterno" class="form-control" placeholder="Apellido Materno" value="{{ Auth::user()->ape_materno }}">
+                                    <input type="text" id="materno" name="materno" class="form-control" placeholder="Apellido Materno" value="{{ Auth::user()->ape_materno }}">
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="icon-user"></span></span>
-                                    <input type="text" id="fijo" class="form-control" placeholder="Telefono Fijo" value="{{ Auth::user()->tel_movil }}">
+                                    <input type="text" id="fijo" name="fijo" class="form-control" placeholder="Telefono Fijo" value="{{ Auth::user()->tel_movil }}">
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="icon-user"></span></span>
-                                    <input type="text" id="movil" class="form-control" placeholder="Telefono Móvil" value="{{ Auth::user()->tel_fijo }}">
+                                    <input type="text" id="movil" name="movil" class="form-control" placeholder="Telefono Móvil" value="{{ Auth::user()->tel_fijo }}">
                                 </div>
                             </div>
                         </div>
