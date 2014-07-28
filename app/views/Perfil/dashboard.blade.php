@@ -151,4 +151,9 @@
         }
     });
     $('.collapse').collapse();
+
+    @if(Session::has('error_mensajes'))
+        $('#unfields').html("{{ Session::get('error_mensajes') }}");
+        $('#error-client').modal();
+    @endif
 @stop

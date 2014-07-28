@@ -75,8 +75,11 @@ Route::filter('csrf', function() {
       			'codigo' => 504
       		);
       	}
-      	else{
+      	else if(Request::path() == 'login'){
       		return Redirect::to('/login')->with('error_login', 'El token ha cambiado');
+      	}
+      	else{
+      		return Redirect::to(Request::path())->with('error_url', 'El token ha cambiado');
       	}
    	}
 });

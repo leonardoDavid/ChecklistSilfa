@@ -2,6 +2,7 @@
 
 use ChecklistSilfa\Libraries\Util;
 use ChecklistSilfa\Repositories\UsuarioRepo;
+use ChecklistSilfa\Managers\UsuarioManager;
 
 class ProfileController extends BaseController {
 
@@ -21,6 +22,13 @@ class ProfileController extends BaseController {
     		)),
     		'permisos' => $this->_getPermission()
     	));
+	}
+
+	public function saveProfile(){
+		if(UsuarioManager::save())
+			return Redirect::to('perfil')->with('success_chage', 'Prefil actualizado :)');
+		else
+			return Redirect::to('perfil')->with('error_chage', 'No se puedo actualizar los datos, intentelo más tarde');
 	}
 
 	private function _getPermission(){

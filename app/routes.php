@@ -30,6 +30,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::post('send-bug','SiteController@notifyBug');
 
     Route::get('perfil','ProfileController@getProfile');
+    Route::post('perfil',array('before' => 'csrf' ,'uses'=> 'ProfileController@saveProfile'));
+
     Route::get('assets/{resource}/{typeOrName?}/{name?}','ResourceController@getResource');
 
 });

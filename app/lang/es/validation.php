@@ -40,12 +40,12 @@ return array(
 	"integer"              => "The :attribute must be an integer.",
 	"ip"                   => "The :attribute must be a valid IP address.",
 	"max"                  => array(
-		"numeric" => "The :attribute may not be greater than :max.",
+		"numeric" => "EL campo :attribute no puede ser mayor a :max.",
 		"file"    => "The :attribute may not be greater than :max kilobytes.",
 		"string"  => "The :attribute may not be greater than :max characters.",
 		"array"   => "The :attribute may not have more than :max items.",
 	),
-	"mimes"                => "The :attribute must be a file of type: :values.",
+	"mimes"                => "El campo :attribute debe ser del tipo type: :values.",
 	"min"                  => array(
 		"numeric" => "El campo :attribute debe contener minimo :min caracteres.",
 		"file"    => "The :attribute must be at least :min kilobytes.",
@@ -68,8 +68,8 @@ return array(
 		"string"  => "El campo :attribute debe tener minimo :size caracteres.",
 		"array"   => "The :attribute must contain :size items.",
 	),
-	"unique"               => "The :attribute has already been taken.",
-	"url"                  => "The :attribute format is invalid.",
+	"unique"               => "El campo :attribute ya se encuentra registrado en el sistema",
+	"url"                  => "El campo :attribute no es un formato valido de URL.",
 
 	/*
 	|--------------------------------------------------------------------------
