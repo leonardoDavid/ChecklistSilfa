@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class UsuarioManager{
 	
@@ -66,14 +67,20 @@ class UsuarioManager{
                 $user->tel_movil = Input::get('movil');
 
             try{
-                $file = Input::file('photo');
-                $destinationPath = app_path().'/ChecklistSilfa/Files/Images/Profile';
-                $filename = Auth::user()->username;
-                $filename .= ($file->getClientOriginalExtension() == 'jpeg') ? '.jpg' : '.'.$file->getClientOriginalExtension();
-                $uploadSuccess = $file->move($destinationPath, $filename);
+                if(Input::file('photo')){
+                    $file = Input::file('photo');
+                    $destinationPath = app_path().'/ChecklistSilfa/Files/Images/Profile';
+                    if(File::exists($destinationPath) && File::isWritable($destinationPath)){
+                        $filename = Auth::user()->username;
+                        $filename .= ($file->getClientOriginalExtension() == 'jpeg') ? '.jpg' : '.'.$file->getClientOriginalExtension();
+                        $uploadSuccess = $file->move($destinationPath, $filename);
                  
-                if(!$uploadSuccess)
-                    return false;
+                        if(!$uploadSuccess)
+                            return false;
+                    }
+                    else
+                        return false;
+                }
 
                 $user->save();
                 return true;
