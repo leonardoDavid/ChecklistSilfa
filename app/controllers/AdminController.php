@@ -1,6 +1,7 @@
 <?php
 
 use ChecklistSilfa\Libraries\Util;
+use ChecklistSilfa\Managers\UsuarioManager;
 
 class AdminController extends BaseController {
 
@@ -19,5 +20,9 @@ class AdminController extends BaseController {
     			'MoreMenu' => Util::getMenu()
     		))
     	));
+	}
+
+	public function adduser(){
+		return UsuarioManager::adduser();
 	}
 }

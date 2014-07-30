@@ -276,7 +276,7 @@
 .navbar{
     left: 0%;
     width: 107%;
-    z-index: 0;
+    z-index: 1;
     -moz-transition: all 0.3s ease-in; -webkit-transition: all 0.3s ease-in;
     -o-transition: all 0.3s ease-in; transition: all 0.3s ease-in; 
     box-shadow: 0 4px 10px 0 #8A8A8A;
@@ -647,6 +647,10 @@ ul.list-check li:before{
 }
 [class^="icheckbox_line-"]{
     border-radius: 0 !important;
+}
+.alert-in-panel{
+  top: -15px;
+  margin-bottom: 0;
 }
 
 @media screen and (min-width: 992px) {

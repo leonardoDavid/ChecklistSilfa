@@ -25,7 +25,7 @@ class ProfileController extends BaseController {
 	}
 
 	public function saveProfile(){
-		if(UsuarioManager::save())
+		if(UsuarioManager::update())
 			return Redirect::to('perfil')->with('success_chage', 'Prefil actualizado :)');
 		else
 			return Redirect::to('perfil')->with('error_chage', 'No se puedo actualizar los datos, intentelo más tarde');

@@ -26,6 +26,7 @@ Route::group(array('before' => 'auth'), function(){
     Route::post('reportes/exportar/{action}/{id?}', 'ReportesController@exportReport');
 
     Route::get('admin', 'AdminController@getDashboard');
+    Route::post('admin/adduser', array('before' => 'csrf','uses' => 'AdminController@addUser'));
 
     Route::post('send-bug','SiteController@notifyBug');
 
@@ -50,3 +51,5 @@ Route::when('ingresar','access:/ingresar');
 Route::when('ingresar/*','access:/ingresar');
 Route::when('reportes','access:/reportes');
 Route::when('reportes/*','access:/reportes');
+Route::when('admin','access:/admin');
+Route::when('admin/*','access:/admin');

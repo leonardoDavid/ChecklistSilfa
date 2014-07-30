@@ -20,9 +20,29 @@
 				<span class="icon-menu show-menu"></span>
 			</div>
 		</div>
-
+        @if (Session::has('error_request'))
+        <div class="row">
+            <div class="col-xs-12 col-md-12 alert alert-dismissable alert-danger">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Woou! </strong> {{ Session::get('error_request') }}
+            </div>
+        </div>
+        @elseif(Session::has('success_request'))
+        <div class="row">
+            <div class="col-xs-12 col-md-12 alert alert-dismissable alert-success">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Yeah! </strong> {{ Session::get('success_request') }}
+            </div>
+        </div>
+        @elseif(Session::has('warning_request'))
+        <div class="row">
+            <div class="col-xs-12 col-md-12 alert alert-dismissable alert-warning">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atencion! </strong> {{ Session::get('warning_request') }}
+            </div>
+        </div>
+        @endif
 		<h1 class="title-page">Administración</h1>
-
         <div class="row">
         	<div class="col-xs-12 col-md-7">
         		<div class="panel panel-default">
@@ -31,29 +51,38 @@
 	        		    	<span class="icon-user"></span>
 	        		    	Agregar Usuario
 	        		    </h3>
-	        		    <button type="submit" class="btn btn-default btn-xs btn-head" data-toggle="collapse" data-target="#addUser">
+	        		    <button class="btn btn-default btn-xs btn-head" data-toggle="collapse" data-target="#addUser">
 							<span class="icon-up" data-collapse-target="addUser"></span>
 						</button>
         		  	</div>
         			{{ Form::open(array('method' => 'post' , 'url' => '/admin/adduser')) }}
         		  	<div id="addUser" class="panel-collapse collapse in">
 	        		  	<div class="panel-body collapse in">
-	        		  		<p>Complete todos estos campos para poder agregar un nuevo usuario en el sistema</p>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-12 alert alert-dismissable alert-warning alert-in-panel">
+                                    <button type="button" class="close" data-dismiss="alert">×</button>
+                                    <strong>Recurde! </strong>
+                                    <ul>
+                                        <li>La contraseña debe tener al menos 6 caracteres</li>
+                                        <li>El nombre y el apellido deben tener al menos 3 caracteres</li>
+                                    </ul>                                    
+                                </div>
+                            </div>
 	        		  		<div class="input-group">
 			                    <span class="input-group-addon"><span class="icon-email"></span></span>
-			                    <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electronico">
+			                    <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electronico" data-requiered="1">
 			                </div>
 			                <div class="input-group">
 			                    <span class="input-group-addon"><span class="icon-lock"></span></span>
-			                    <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña">
+			                    <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" data-requiered="1">
 			                </div>
 		        		    <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-user"></span></span>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="Nombres">
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Nombres" data-requiered="1">
                             </div>
                             <div class="input-group">
                                 <span class="input-group-addon"><span class="icon-user"></span></span>
-                                <input type="text" id="paterno" name="paterno" class="form-control" placeholder="Apellido Paterno">
+                                <input type="text" id="paterno" name="paterno" class="form-control" placeholder="Apellido Paterno" data-requiered="1">
                             </div>
                             <div class="row">
                             	<div class="col-xs-12 col-md-12">
@@ -84,7 +113,7 @@
                             </div>
 	        		  	</div>
 	        		  	<div class="panel-footer clearfix">
-	        		  		<button class="btn btn-default pull-right">Agregar <span class="icon-right"></span></button>
+	        		  		<button id="addUserButton" class="btn btn-default pull-right">Agregar <span class="icon-right"></span></button>
 	        		  	</div>
 	        		</div>
         			{{ Form::close() }}
@@ -120,6 +149,8 @@
 @stop
 
 @section('scripts')
+    var notSend = true;
+
 	$('input.icheck-input').each(function(){
     	var self = $(this),
       	label = self.next(),
@@ -152,4 +183,50 @@
 		$('span[data-collapse-target="addUser"]').addClass('icon-up');
 		$('span[data-collapse-target="addUser"]').removeClass('icon-down');
 	});
+
+    $('form').submit(function(event){
+        $('#addUserButton').attr('disabled',true);
+        if(notSend){
+            event.preventDefault();
+            if(validate()){
+                notSend = false;
+                $('form').submit();
+            }
+            else
+                $('#addUserButton').attr('disabled',false);
+        }
+    });
+
+    $('*[data-requiered="1"]').focus(function(event){
+        $(this).parent().removeClass('has-error');
+    });
+
+    function validate(){
+        var hasError = true;
+        $('*[data-requiered="1"]').each(function(index, el){
+            if( ($(this).attr('id') == "password" &&  $(this).val().length < 6 ) ){
+                $(this).parent().addClass('has-error');
+                hasError = false;
+            }
+            if( ($(this).attr('name') == "password" &&  $(this).val().length < 6 ) ){
+                hasError = false;
+            }
+            else if($(this).val() == "" || $(this).val() == "0"){
+                $(this).parent().addClass('has-error');
+                hasError = false;
+            }
+        });
+
+        return hasError;
+    }
+
+    @if (Session::has('error_request') || Session::has('success_request'))
+        setTimeout(function() {
+            $('.alert').slideUp();
+        }, 5000);
+    @endif
+    @if(Session::has('error_mensajes'))
+        $('#unfields').html("{{ Session::get('error_mensajes') }}");
+        $('#error-client').modal();
+    @endif
 @stop
