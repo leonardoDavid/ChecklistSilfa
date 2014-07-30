@@ -104,6 +104,11 @@
                     					<h4 class="list-group-item-heading">Reportes</h4>
                     		    		<p class="list-group-item-text">En esta sección el usuario podra generar reportes de todos los checklist ingresados en el sistema</p>
                     				</div>
+                    				<input type="checkbox" class="icheck-input" name="lista">
+                    				<div>
+                    					<h4 class="list-group-item-heading">Lista de Reportes</h4>
+                    		    		<p class="list-group-item-text">Otorgando este permiso el usuario tendra acceso a ver y descargar todos los reportes que se han generado en la plataforma.</p>
+                    				</div>
                     				<input type="checkbox" class="icheck-input" name="admin">
                     				<div>
                     					<h4 class="list-group-item-heading">Administración</h4>
@@ -122,9 +127,9 @@
 			<div class="col-xs-12 col-md-5">
 				<div class="row">
 					<div class="col-xs-12 col-md-12 space-bottom">
-						<button class="btn btn-primary btn-sm col-xs-12 col-sm-4 col-md-4">Carga Masiva <span class="icon-excel"></span></button>
-						<button class="btn btn-primary btn-sm col-xs-12 col-sm-4 col-md-4">Exportar Usuarios <span class="icon-group"></span></button>
-						<button class="btn btn-primary btn-sm col-xs-12 col-sm-4 col-md-4">Editar Usuarios <span class="icon-tack"></span></button>						
+						<button id="masiveLoad" class="btn btn-primary btn-sm col-xs-12 col-sm-4 col-md-4">Carga Masiva <span class="icon-excel"></span></button>
+						<button id="exportUsers" class="btn btn-primary btn-sm col-xs-12 col-sm-4 col-md-4">Exportar Usuarios <span class="icon-group"></span></button>
+						<button id="editUsers" class="btn btn-primary btn-sm col-xs-12 col-sm-4 col-md-4">Editar Usuarios <span class="icon-tack"></span></button>						
 					</div>
 					<div class="col-xs-12 col-md-12 well text-center">
 						<span>Modo Mantención</span> 
@@ -199,6 +204,43 @@
 
     $('*[data-requiered="1"]').focus(function(event){
         $(this).parent().removeClass('has-error');
+    });
+
+    $('#exportUsers').click(function(){
+    	$('#exportUsers').attr('disabled',true);
+    	$('.loading-box').html('Enviando ...');
+    	$('.loading-box').fadeIn();
+    	$.ajax({
+    		url: '/reportes/exportar/users',
+    		type: 'post',
+    		success : function(response){
+    			//var response = JSON.parse(data);
+    			if(response['status']){
+    				$('.loading-box').html('<span class="icon-check"><span> Enviado');
+    				$('#exportUsers').attr('disabled',false);
+	    			setTimeout(function() {
+	    			    $('.loading-box').fadeOut();
+	    			}, 3000);
+	    		}
+    			else{
+    				$('#error-motivo').html(response['motivo']);
+                    $('#error-codigo').text((response['codigo']) ? response['codigo'] : 501);
+                    $('.loading-box').fadeOut('fast', function() {
+	                    $('#error-server').modal();
+	                	$('#exportUsers').attr('disabled',false);
+	                });
+    			}
+    		},
+    		error : function(xhr){
+    			if(xhr.status == 500 || xhr.status == 404 || xhr.status == 403)
+                    $('#error-motivo').text('Error del servidor :( , no te preocupes, es nuestra culpa y lo arreglaremos en breves.');
+                $('#error-codigo').text(xhr.status);
+                $('.loading-box').fadeOut('fast', function() {
+                    $('#error-server').modal();
+                	$('#exportUsers').attr('disabled',false);
+                });
+    		}
+    	});    	
     });
 
     function validate(){

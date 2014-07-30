@@ -1,6 +1,7 @@
 <?php namespace ChecklistSilfa\Repositories;
 
 use ChecklistSilfa\Entities\Usuario;
+use ChecklistSilfa\Entities\Checklist;
 
 class UsuarioRepo{
 	
@@ -16,8 +17,19 @@ class UsuarioRepo{
 		return Usuario::find($id);
 	}
 
-	public static function all(){
-		return Usuario::where('estado','=','1')->get();
+	public static function all($includeDisbled = false){
+		if($includeDisbled)
+			return Usuario::all();
+		else
+			return Usuario::where('estado','=','1')->get();
+	}
+
+	public static function countChecklist($id = null){
+		if(!is_null($id)){
+			return Checklist::where('user_id','=',$id)->count();
+		}
+		else
+			return 0;
 	}
 
 }

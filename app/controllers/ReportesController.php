@@ -186,6 +186,14 @@ class ReportesController extends BaseController {
                     );
                 }
                 break;
+            case 'users':
+                $data = UsuarioRepo::all(true);
+                $more = array(
+                    'model' => 'user',
+                    'ext' => 'csv'
+                );
+                $response = $this->generateFileReport($data,$more);
+                break;
             default:
                 $response = array(
                     'status' => false,
@@ -195,6 +203,23 @@ class ReportesController extends BaseController {
         }
 
         return $response;
+    }
+
+    public function showListReport(){
+        $tipos = $usuarios = "";
+
+        $filters = $this->_getFiltersReport();
+        $pages = $this->_listCheck($filters);
+        
+        return View::make('Reportes.ListReport',array(
+            'MainMenu' => View::make('Menu.MainMenu',array(
+                'MoreMenu' => Util::getMenu()
+            )),
+            'Tipos' => $tipos,
+            'Supervisores' => $usuarios,
+            'checklists' => "<tr data-location='/lista-reportes'><td colspan='4'>No se encontraron Reportes</td><tr/>",
+            'links' => ''
+        ));
     }
 
     /*
@@ -293,11 +318,24 @@ class ReportesController extends BaseController {
                 array_push($headersCSV, 'ID Checklist');
             }
         }
+        else{
+            if($more['model'] == 'user'){
+                array_push($headersCSV, 'Nombre');
+                array_push($headersCSV, 'Apellido Paterno');
+                array_push($headersCSV, 'Apellido Materno');
+                array_push($headersCSV, 'Username');
+                array_push($headersCSV, 'Correo Electronico');
+                array_push($headersCSV, 'Estado');
+                array_push($headersCSV, 'Checklist Generados');
+                array_push($headersCSV, 'Creado en Sistema');
+                array_push($headersCSV, 'Ultima Actualizacion');
+            }
+        }
 
         if(count($data) > 0){
             try{
                 $fileName = date('d-m-Y_H:i:s')."_By-".Auth::user()->username."_";
-                $fileName .= (!is_null($more) && $more['model'] == "checklist-details") ? $more['model'] : $data['model'];
+                $fileName .= (!is_null($more) && array_key_exists('model', $more) ) ? $more['model'] : $data['model'];
                 $fileLocation = app_path().'/ChecklistSilfa/Files/Reports/'.$fileName.".csv";
                 $file = fopen( $fileLocation, 'w');
                 fputcsv($file, $headersCSV);
@@ -357,6 +395,17 @@ class ReportesController extends BaseController {
                             array_push($tmp, $row->comentario);
                             if($row->isContable == 1)
                                 $all++;
+                        }
+                        else if ($more['model'] == 'user'){
+                            array_push($tmp, $row->nombre);
+                            array_push($tmp, $row->ape_paterno);
+                            array_push($tmp, $row->ape_materno);
+                            array_push($tmp, $row->username);
+                            array_push($tmp, $row->email);
+                            array_push($tmp, ($row->estado == 1) ? 'Habilitado' : 'Deshabilitado');
+                            array_push($tmp, UsuarioRepo::countChecklist($row->id));
+                            array_push($tmp, $row->created_at);
+                            array_push($tmp, $row->updated_at);
                         }
                     }
 

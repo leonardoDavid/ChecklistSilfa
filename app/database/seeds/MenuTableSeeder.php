@@ -23,6 +23,12 @@ class MenuTableSeeder extends Seeder{
 			'estado' => 1
         ));
         MainMenu::create(array(
+            'nombre' => "Lista de Reportes",
+            'url' => "/lista-reportes",
+            'icon' => "icon-book",
+            'estado' => 1
+        ));
+        MainMenu::create(array(
             'nombre' => "Administración",
             'url' => "/admin",
             'icon' => "icon-gear",

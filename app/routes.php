@@ -28,6 +28,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::get('admin', 'AdminController@getDashboard');
     Route::post('admin/adduser', array('before' => 'csrf','uses' => 'AdminController@addUser'));
 
+    Route::get('lista-reportes','ReportesController@showListReport');
+
     Route::post('send-bug','SiteController@notifyBug');
 
     Route::get('perfil','ProfileController@getProfile');
@@ -53,3 +55,5 @@ Route::when('reportes','access:/reportes');
 Route::when('reportes/*','access:/reportes');
 Route::when('admin','access:/admin');
 Route::when('admin/*','access:/admin');
+Route::when('lista-reportes','access:/lista-reportes');
+Route::when('lista-reportes/*','access:/lista-reportes');

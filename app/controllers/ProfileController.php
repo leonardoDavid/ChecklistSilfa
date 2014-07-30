@@ -45,6 +45,9 @@ class ProfileController extends BaseController {
 				case '/reportes':
 					$pemrission .= "<li>Exportación de Reportes</li>";
 					break;
+				case '/lista-reportes':
+					$pemrission .= "<li>Lista general de Reportes</li>";
+					break;
 				case '/admin':
 					$pemrission .= "<li>Administración del Sistema</li>";
 					break;

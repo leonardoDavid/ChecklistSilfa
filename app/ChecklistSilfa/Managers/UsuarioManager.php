@@ -135,7 +135,19 @@ class UsuarioManager{
                 return Redirect::to('admin')->with('error_request','El usuario no pudo ser creado, proceso abortado');
             }
 
-            return UsuarioManager::assignAccess(Input::get('dashboard',null),Input::get('ingresar',null),Input::get('reportes',null),Input::get('admin',null),$user->id);
+            $welcome = UsuarioManager::sendWelcome($user);
+            if(UsuarioManager::assignAccess(Input::get('dashboard',null),Input::get('ingresar',null),Input::get('reportes',null),Input::get('admin',null),Input::get('lista',null),$user->id)){
+                if($welcome)
+                    return Redirect::to('admin')->with('success_request','Usuario agregado con exito!');
+                else
+                    return Redirect::to('admin')->with('warning_request','Usuario agregado con exito! <strong>No se pudo enviar un email de bienvenida</strong>');
+            }
+            else{
+                if($welcome)
+                    return Redirect::to('admin')->with('warning_request','Se creo el usuario pero no se asignaron todos los permisos');
+                else
+                    return Redirect::to('admin')->with('warning_request','Se creo el usuario pero no se asignaron todos los permisos ni se envio el email de bienvenida');
+            }
 
         }
     }
@@ -198,7 +210,7 @@ class UsuarioManager{
         return $name;
     }
 
-    public static function assignAccess($dashboard = null,$ingresar = null,$reportes = null,$admin = null,$user = null){
+    public static function assignAccess($dashboard = null,$ingresar = null,$reportes = null,$admin = null,$lista = null,$user = null){
         $status = true;
 
         if(!is_null($user)){
@@ -238,11 +250,23 @@ class UsuarioManager{
                     }
                 }
             }
+            if(!is_null($lista)){
+                if($lista == "on" || $lista == "yes" || $lista == 1){
+                    $permiso = new Permisos;
+                    $permiso->user_id = $user;
+                    $permiso->permisos_id = 4;
+                    try{
+                        $permiso->save();
+                    }catch (Exception $e){
+                        $status = false;
+                    }
+                }
+            }
             if(!is_null($admin)){
                 if($admin == "on" || $admin == "yes" || $admin == 1){
                     $permiso = new Permisos;
                     $permiso->user_id = $user;
-                    $permiso->permisos_id = 4;
+                    $permiso->permisos_id = 5;
                     try{
                         $permiso->save();
                     }catch (Exception $e){
@@ -254,10 +278,25 @@ class UsuarioManager{
         else
             $status = false;
 
-        if($status)
-            return Redirect::to('admin')->with('success_request','Usuario agregado con exito!');
-        else
-            return Redirect::to('admin')->with('warning_request','Se creo el usuario pero no se asignaron todos los permisos');
+        return $status;
+    }
+
+    public static function sendWelcome($user){
+        $datos = array(
+            'template' => "emails.WelcomeSystem",
+            'info' => array(
+                'user' => $user->nombre." ".$user->ape_paterno,
+                'username' => $user->username,
+                'email' => $user->email,
+                'password' => Input::get('password')
+            ),
+            'receptor' => array(
+                'email' => $user->email,
+                'name' => 'Sistema de Checklist',
+                'subject' => 'Bienvenido a Checklist System'
+            )
+        );
+        return Util::sendEmail($datos);
     }
 
 }

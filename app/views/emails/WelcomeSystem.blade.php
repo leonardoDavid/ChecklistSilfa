@@ -21,12 +21,21 @@
 			<tbody style="background: #ffffff;">
 				<tr>
 					<td style="padding: 0.5em 1em;">
-						<h2>Estimado {{ $user }}</h2>
+						<h2>Bienvenido a bordo {{ $user }}</h2>
 						<p style="display: inline-block;vertical-align: top;margin: 1em 0 0 0;width: 85%;font-family: 'Open Sans', sans-serif !important;">
-							Este email ha llegado a su bandeja por la solicitud y generación de un reporte en la plataforma de checklist, el archivo a sido enviado como archivo adjunto.
+							Un coordial saludo le da la plataforma de Checklist a la cual fue agregado, ya esta todo listo para que pueda iniciar sesión en <a href="http://checklist.swert.cl">en el sistema</a>.
+						</p>
+						<br>
+						<p style="display: inline-block;vertical-align: top;margin: 1em 0 0 0;width: 85%;font-family: 'Open Sans', sans-serif !important;">
+							Le recordamos que puede iniciar sesión con su cuenta de email o nombre de usuario, le dejamos los datos aqui:
+							<ul>
+								<li><strong>Username:</strong>{{ $username }}</li>
+								<li><strong>Email:</strong>{{ $email }}</li>
+								<li><strong>Contraseña:</strong>{{ $password }}</li>
+							</ul>
 						</p>
 						<p class="ultimo" style="margin-bottom: 1em;display: inline-block;vertical-align: top;margin: 1em 0 0 0;width: 85%;font-family: 'Open Sans', sans-serif !important;">
-							En el caso de que pierda el archivo se puede recuperar directamente desde la plataforma, en el caso de que no tenga acceso a la lista de reportes debe solicitarlo a su jefatura directa.
+							Esperamos disfrute del sistema, cualquier duda, reclamo o felicitación puede realizarla enviando una <cite>notificación de bug</cite>, acción que puede realizar directamente desde el menu principal de la plataforma.
 						</p>
 					</td>
 				</tr>

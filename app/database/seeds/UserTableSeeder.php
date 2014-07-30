@@ -11,7 +11,6 @@ class UserTableSeeder extends Seeder {
 			'password' => Hash::make('test'),
 			'nombre' => "Testing",
 			'ape_paterno' => "Swert",
-			'remember_token' => "future-token",
 			'estado' => 1
         ));
     }

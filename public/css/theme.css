@@ -180,6 +180,7 @@
     margin: 0 auto;
 }
 .loading-box{
+    z-index: 2;
     position: fixed;
     background: #F1E774;
     left: 38.5%;
@@ -525,6 +526,11 @@
 }
 .filters div{
     margin-bottom: 0.5em;
+}
+.filters-list select,
+.filters-list span{
+    width: 49%;
+    display: inline-block;
 }
 .table-local > thead > tr > th,
 .table-local > tbody > tr > th,
