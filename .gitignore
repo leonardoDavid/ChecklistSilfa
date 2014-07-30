@@ -5,3 +5,8 @@ Thumbs.db
 *~
 app/config/database.php
 vendor/
+*.csv
+*.xls
+*.xlsx
+*.jpg
+*.png
