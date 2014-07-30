@@ -5,8 +5,10 @@ Thumbs.db
 *~
 app/config/database.php
 vendor/
-*.csv
-*.xls
-*.xlsx
-*.jpg
-*.png
+app/ChecklistSilfa/Files/Reports/*.csv
+app/ChecklistSilfa/Files/Reports/*.xls
+app/ChecklistSilfa/Files/Reports/*.xlsx
+app/ChecklistSilfa/Files/Images/*.jpg
+app/ChecklistSilfa/Files/Images/Profile/*.jpg
+app/ChecklistSilfa/Files/Images/*.png
+app/ChecklistSilfa/Files/Images/Profile/*.png
