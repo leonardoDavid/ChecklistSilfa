@@ -9,6 +9,7 @@ vendor/
 bootstrap/compiled.php
 app/config/local/
 app/config/database.php
+app/config/mail.php
 app/ChecklistSilfa/Files/Reports/*.csv
 app/ChecklistSilfa/Files/Reports/*.xls
 app/ChecklistSilfa/Files/Reports/*.xlsx
