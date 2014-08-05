@@ -108,6 +108,7 @@
     @yield('libjs')
     <script>
         var log;
+        var values = new Array();
         $(document).on('ready',function(){
             $('.overlay-loading').fadeOut();
             $('.show-menu').click(function(event) {

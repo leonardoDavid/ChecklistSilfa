@@ -26,7 +26,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::post('reportes/exportar/{action}/{id?}', 'ReportesController@exportReport');
 
     Route::get('admin', 'AdminController@getDashboard');
-    Route::post('admin/adduser', array('before' => 'csrf','uses' => 'AdminController@addUser'));
+    Route::post('admin/users/add', array('before' => 'csrf','uses' => 'AdminController@addUser'));
+    Route::post('admin/users/refresh', 'AdminController@refreshUsers');
 
     Route::get('lista-reportes','ReportesController@showListReport');
 
