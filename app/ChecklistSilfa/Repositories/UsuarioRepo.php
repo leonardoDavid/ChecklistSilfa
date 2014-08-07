@@ -2,6 +2,7 @@
 
 use ChecklistSilfa\Entities\Usuario;
 use ChecklistSilfa\Entities\Checklist;
+use Illuminate\Support\Facades\Auth;
 
 class UsuarioRepo{
 	
@@ -9,15 +10,18 @@ class UsuarioRepo{
 		return Usuario::menus();
 	}
 
-	public static function count(){
-		return Usuario::where('estado','=','1')->count();
+	public static function count($includeMe = false){
+		if($includeMe)
+			return Usuario::where('estado','=','1')->count();
+		else
+			return Usuario::where('estado','=','1')->where('id','!=',Auth::user()->id)->count();
 	}
 
 	public static function find($id){
 		return Usuario::find($id);
 	}
 
-	public static function all($includeDisbled = false){
+	public static function all($includeDisbled = true){
 		if($includeDisbled)
 			return Usuario::all();
 		else
@@ -30,6 +34,13 @@ class UsuarioRepo{
 		}
 		else
 			return 0;
+	}
+
+	public static function withOutMe($includeDisbled = true){
+		if($includeDisbled)
+			return Usuario::where('id','!=',Auth::user()->id)->get();
+		else
+			return Usuario::where('estado','=','1')->where('id','!=',Auth::user()->id)->get();
 	}
 
 }

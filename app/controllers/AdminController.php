@@ -20,7 +20,7 @@ class AdminController extends BaseController {
     		'MainMenu' => View::make('Menu.MainMenu',array(
     			'MoreMenu' => Util::getMenu()
     		)),
-    		'empleadosListTable' => UsuarioRepo::all()
+    		'empleadosListTable' => UsuarioRepo::withOutMe()
     	));
 	}
 
@@ -31,17 +31,43 @@ class AdminController extends BaseController {
 	public function refreshUsers(){
         $response = array();
         $index = 0;
-        $users = UsuarioRepo::all();
+        $users = UsuarioRepo::withOutMe();
         foreach($users as $employed){
             $tmp = array(
                 'name' => ucwords($employed->nombre),
                 'lastname' => ucwords($employed->ape_paterno)." ".ucwords($employed->ape_materno),
                 'email' => $employed->email,
-                'active' => ($employed->active == 1) ? "Activo" : "Deshabilitado",
+                'active' => ($employed->estado == 1) ? "Activo" : "Deshabilitado",
                 'checkbox' => "<input type='checkbox' class='flat-grey' name='employedIdOperating' value='".$employed->id."'>"
             );
             $response[$index] = $tmp;
             $index++;
+        }
+        return $response;
+    }
+
+    public function disabledUsers(){
+    	if(Request::ajax()){
+            $response = UsuarioManager::disabled();
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'motivo' => "Error en la solicitud"
+            );
+        }
+        return $response;
+    }
+
+    public function enabledUsers(){
+        if(Request::ajax()){
+            $response = UsuarioManager::enabled();
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'motivo' => "Error en la solicitud"
+            );
         }
         return $response;
     }

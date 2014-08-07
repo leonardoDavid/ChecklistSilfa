@@ -299,4 +299,64 @@ class UsuarioManager{
         return Util::sendEmail($datos);
     }
 
+    public static function enabled($disabled=null){
+        $ids = explode(",", Input::get('ids'));
+        $pased = true;
+        $idsEnabled = array();
+        foreach ($ids as $employ){
+
+            $validation = Validator::make(
+                array(
+                    'usuario' => $employ
+                ),
+                array(
+                    'usuario' => 'required|exists:user,id'
+                )
+            );
+
+            if($validation->fails()){
+                $pased = false;
+                break;
+            }
+            else{
+                array_push($idsEnabled, $employ);
+            }
+        }
+
+        if($pased){
+            foreach ($idsEnabled as $id){
+                $empleado = Usuario::find($id);
+                $empleado->estado = (is_null($disabled)) ? 1 : 0;
+                try {
+                    $empleado->save();
+                    $status = true;
+                }catch (Exception $e) {
+                    $status = false;
+                    $response = array(
+                        'status' => false,
+                        'motivo' => "Interrupción en el proceso de actualización",
+                        'execption' => $e->getMessage()
+                    );
+                }
+                if($status){
+                    $response = array(
+                        'status' => true
+                    );
+                }
+            }
+        }
+        else{
+            $response = array(
+                'status' => false,
+                'motivo' => "Hay usuarios no registrados en el sistema, imposible actualizar"
+            );            
+        }
+
+        return $response;
+    }
+
+    public static function disabled(){
+        return UsuarioManager::enabled(1);
+    }
+
 }

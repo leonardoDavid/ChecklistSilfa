@@ -57,7 +57,7 @@
 							<span class="icon-up" data-collapse-target="addUser"></span>
 						</button>
         		  	</div>
-        			{{ Form::open(array('method' => 'post' , 'url' => '/admin/users/add')) }}
+        			{{ Form::open(array('method' => 'post' , 'url' => '/admin/users/add', 'id' => 'addUserForm')) }}
         		  	<div id="addUser" class="panel-collapse collapse in">
 	        		  	<div class="panel-body collapse in">
                             <div class="row">
@@ -120,7 +120,7 @@
                             </div>
 	        		  	</div>
 	        		  	<div class="panel-footer clearfix">
-	        		  		<button id="addUserButton" class="btn btn-default pull-right">Agregar <span class="icon-right"></span></button>
+	        		  		<button type="submit" id="addUserButton" class="btn btn-default pull-right">Agregar <span class="icon-right"></span></button>
 	        		  	</div>
 	        		</div>
         			{{ Form::close() }}
@@ -155,12 +155,13 @@
                                                 <th></th>
                                             </tr>
                                         </thead>
+                                        <tbody>
                                         @foreach($empleadosListTable as $employed)
                                             <tr>
                                                 <td>{{ ucwords($employed->nombre) }}</td>
                                                 <td>{{ ucwords($employed->ape_paterno)." ".ucwords($employed->ape_materno) }}</td>
                                                 <td>{{ $employed->email }}</td>
-                                                @if($employed->active == 1)
+                                                @if($employed->estado == 1)
                                                     <td>Activo</td>
                                                 @else
                                                     <td>Deshabilitado</td>
@@ -170,7 +171,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        <tbody>
                                         </tbody>
                                     </table>
                                 </div>
@@ -178,9 +178,9 @@
                                     <p class="pull-left">
                                         A los marcados
                                     </p>
-                                    <button class="btn btn-default btn-sm pull-right"><span class="icon-wrong"></span> Deshabilitar</button>
-                                    <button class="btn btn-default btn-sm pull-right"><span class="icon-check"></span> Habilitar</button>
-                                    <button class="btn btn-default btn-sm pull-right"><span class="icon-search"></span> Editar</button>
+                                    <button class="btn btn-default btn-sm pull-right" id="btnDisabledUsers"><span class="icon-wrong"></span> Deshabilitar</button>
+                                    <button class="btn btn-default btn-sm pull-right" id="btnEnabledUsers"><span class="icon-check"></span> Habilitar</button>
+                                    <button class="btn btn-default btn-sm pull-right" id="btnEditUsers"><span class="icon-search"></span> Editar</button>
                                 </div>
                             </div>
                         </div>
@@ -259,19 +259,19 @@
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="icon-email"></span></span>
-                                        <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electronico" data-requiered="1">
+                                        <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electronico">
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="icon-lock"></span></span>
-                                        <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" data-requiered="1">
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña">
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="icon-user"></span></span>
-                                        <input type="text" id="name" name="name" class="form-control" placeholder="Nombres" data-requiered="1">
+                                        <input type="text" id="name" name="name" class="form-control" placeholder="Nombres">
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="icon-user"></span></span>
-                                        <input type="text" id="paterno" name="paterno" class="form-control" placeholder="Apellido Paterno" data-requiered="1">
+                                        <input type="text" id="paterno" name="paterno" class="form-control" placeholder="Apellido Paterno">
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-md-12">
@@ -340,6 +340,7 @@
             }
         });
         $('*[data-autohide="1"]').hide();
+        trackSelected();
         tableDataEmployes = $("#employes").DataTable({
             "oLanguage": {
                 "sEmptyTable": "Sin Datos",
@@ -379,12 +380,6 @@
     	});
   	});
 
-    $('input.flat-grey').each(function(){
-        $(this).iCheck({
-            checkboxClass: 'icheckbox_flat-grey'
-        });
-    });
-
   	$('input.icheck-input').on('ifChecked',function(){
 		$(this).parent().removeClass('icheckbox_line-grey');
 		$(this).parent().addClass('icheckbox_line-black');
@@ -405,13 +400,13 @@
 		$('span[data-collapse-target="addUser"]').removeClass('icon-down');
 	});
 
-    $('form').submit(function(event){
+    $('#addUserForm').submit(function(event){
         $('#addUserButton').attr('disabled',true);
         if(notSend){
             event.preventDefault();
             if(validate()){
                 notSend = false;
-                $('form').submit();
+                $('#addUserForm').submit();
             }
             else
                 $('#addUserButton').attr('disabled',false);
@@ -462,6 +457,122 @@
     $('#refresh').click(function(event){
         refreshTable();
     });
+
+    $('#btnDisabledUsers').click(function(){
+        disabledUsers();
+    });
+
+    $('#btnEnabledUsers').click(function(){
+        enabledUsers();
+    });
+
+    $('#btnEditUsers').click(function(){
+        editsUsers();
+    });
+
+    function enabledUsers(){
+        if(values.length > 0){
+            $.ajax({
+                url: '/admin/users/enabled',
+                type: 'post',
+                data: { 'ids' : values.toString() },
+                beforeSend:function(){
+                    $('#confirm').modal('hide');
+                },
+                success : function(response){
+                    if(response['status']){
+                        refreshTable();
+                    }
+                    else{
+                        $('#error-motivo').text(response['motivo']);
+                        $('#error-codigo').text(response['codigo']);
+                        $('#error-server').modal();
+                    }
+                },
+                error : function(xhr){
+                    $('#error-motivo').text('Error de conexión al momento de recuperar los datos, intentelo más tarde.');
+                    $('#error-codigo').text(xhr.status);
+                    $('#error-server').modal();
+                }
+            });
+        }
+        else{
+            $('#error-motivo').text('Debe seleccionar uno o más usuarios para realizar la acción');
+            $('#error-codigo').text(101);
+            $('#error-server').modal();
+        }
+    }
+
+    function disabledUsers(){
+        if(values.length > 0){
+            $.ajax({
+                url: '/admin/users/disabled',
+                type: 'post',
+                data: { 'ids' : values.toString() },
+                beforeSend:function(){
+                    $('#confirm').modal('hide');
+                },
+                success : function(response){
+                    if(response['status']){
+                        refreshTable();
+                    }
+                    else{
+                        $('#error-motivo').text(response['motivo']);
+                        $('#error-codigo').text(response['codigo']);
+                        $('#error-server').modal();
+                    }
+                },
+                error : function(xhr){
+                    $('#error-motivo').text('Error de conexión al momento de recuperar los datos, intentelo más tarde.');
+                    $('#error-codigo').text(xhr.status);
+                    $('#error-server').modal();
+                }
+            });
+        }
+        else{
+            $('#error-motivo').text('Debe seleccionar uno o más usuarios para realizar la acción');
+            $('#error-codigo').text(101);
+            $('#error-server').modal();
+        }
+    }
+
+    function editsUsers(){
+        if(values.length > 0){
+            $.ajax({
+                url: '/admin/users/edit',
+                type: 'post',
+                data: { 'ids' : values.toString() },
+                beforeSend:function(){
+                    $('.loading-box').text('Cargando ...').fadeIn();
+                },
+                success : function(response){
+                    if(response['status']){
+                        $('.loading-box').text('Cargando ...');
+                        setTimeout(function() {
+                            $('.loading-box').fadeOut();
+                        }, 2000);
+                    }
+                    else{
+                        $('#error-motivo').text(response['motivo']);
+                        $('#error-codigo').text(response['codigo']);
+                        $('.loading-box').fadeOut();
+                        $('#error-server').modal();
+                    }
+                },
+                error : function(xhr){
+                    $('#error-motivo').text('Error de conexión al momento de recuperar los datos, intentelo más tarde.');
+                    $('#error-codigo').text(xhr.status);
+                    $('.loading-box').fadeOut();
+                    $('#error-server').modal();
+                }
+            });
+        }
+        else{
+            $('#error-motivo').text('Debe seleccionar uno o más usuarios para realizar la acción');
+            $('#error-codigo').text(101);
+            $('#error-server').modal();
+        }
+    }
 
     function validate(){
         var hasError = true;

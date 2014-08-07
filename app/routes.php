@@ -28,6 +28,8 @@ Route::group(array('before' => 'auth'), function(){
     Route::get('admin', 'AdminController@getDashboard');
     Route::post('admin/users/add', array('before' => 'csrf','uses' => 'AdminController@addUser'));
     Route::post('admin/users/refresh', 'AdminController@refreshUsers');
+    Route::post('admin/users/disabled', 'AdminController@disabledUsers');
+    Route::post('admin/users/enabled', 'AdminController@enabledUsers');
 
     Route::get('lista-reportes','ReportesController@showListReport');
 
