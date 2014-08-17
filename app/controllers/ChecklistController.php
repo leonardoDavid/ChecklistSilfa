@@ -71,8 +71,7 @@ class ChecklistController extends BaseController {
 	    		'TiendaID' => $tienda->id,
 	    		'Sucursal' => $sucursal->nombre,
 	    		'SucursalID' => $sucursal->id,
-	    		'Form' => $form['questions'],
-	    		'Total' => $form['count']
+	    		'Form' => $form['questions']
 	    	));
 	    }
     }
@@ -110,7 +109,6 @@ class ChecklistController extends BaseController {
         $form = FormRepo::find($area)->preguntas;
 
         $questions = "";
-        $count = 0;
         foreach ($form as $question){
             if($question->id < 10)
                 $hash = "0".$question->id;
@@ -120,16 +118,13 @@ class ChecklistController extends BaseController {
                 'Type' => $question->tipo,
                 'ID' => $hash.md5($question->id.date("Ymdhis")),
                 'Pregunta' => $question->texto,
-                'contable' => $question->isContable,
+                'contable' => $question->ponderacion,
                 'CheckID' => md5($question->id.$question->texto.date("Ymd"))
             ));
-            if($question->isContable == 1)
-                $count++;
         }
 
         return array(
-            'questions' => $questions,
-            'count' => $count
+            'questions' => $questions
         );
     }
 

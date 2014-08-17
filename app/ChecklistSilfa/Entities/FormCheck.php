@@ -7,6 +7,8 @@ class FormCheck extends \Eloquent{
 
 	//Relacion que indica "la tabla formulario tiene muchas preguntas", toma los registros de una table intermedia
 	public function preguntas(){
-        return $this->belongsToMany('ChecklistSilfa\Entities\Pregunta', 'preguntas_formulario', 'formulario_id', 'pregunta_id')->where('preguntas.estado','=','1');
+        return $this->belongsToMany('ChecklistSilfa\Entities\Pregunta', 'preguntas_formulario', 'formulario_id', 'pregunta_id')
+        		->where('preguntas.estado','=','1')
+        		->addSelect('preguntas_formulario.ponderation as ponderacion');
     }
 }

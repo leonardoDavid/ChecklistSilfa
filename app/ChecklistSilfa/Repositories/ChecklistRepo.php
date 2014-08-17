@@ -51,7 +51,8 @@ class ChecklistRepo{
 	public static function details($id){
 		return ChecklistDetalle::where('checklist_id','=',$id)
 					->join('preguntas','preguntas.id','=','detalle_checklist.preguntas_form_id')
-					->select('preguntas.texto as texto','preguntas.tipo as tipo','preguntas.isContable as isContable','detalle_checklist.respuesta as respuesta','detalle_checklist.comentario as comentario','detalle_checklist.id as id');
+					->select('preguntas.texto as texto','preguntas.tipo as tipo','preguntas.isContable as isContable','detalle_checklist.respuesta as respuesta','detalle_checklist.comentario as comentario','detalle_checklist.id as id')
+                    ->orderBy('preguntas.id','ASC');
 	}
 
     public static function count(){

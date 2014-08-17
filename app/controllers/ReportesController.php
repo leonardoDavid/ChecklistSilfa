@@ -5,6 +5,7 @@ use ChecklistSilfa\Repositories\AreaRepo;
 use ChecklistSilfa\Repositories\TiendaRepo;
 use ChecklistSilfa\Repositories\UsuarioRepo;
 use ChecklistSilfa\Repositories\ChecklistRepo;
+use ChecklistSilfa\Repositories\PreguntaRepo;
 
 class ReportesController extends BaseController {
 
@@ -310,12 +311,16 @@ class ReportesController extends BaseController {
 
         if(is_null($more)){
             if($data['model'] == "checklist-list" || $data['model'] == "checklist-filters"){
+                array_push($headersCSV, 'ID Checklist');
                 array_push($headersCSV, 'Area');
                 array_push($headersCSV, 'Tienda');
                 array_push($headersCSV, 'Sucursal');
                 array_push($headersCSV, 'Supervisor');
-                array_push($headersCSV, 'Fecha');
-                array_push($headersCSV, 'ID Checklist');
+                array_push($headersCSV, 'Año');
+                array_push($headersCSV, 'Mes');
+                array_push($headersCSV, 'Dia');
+
+                $this->addQuestionHeaders($headersCSV,$data[0]['area']);
             }
         }
         else{
@@ -360,23 +365,36 @@ class ReportesController extends BaseController {
                     if(is_null($more)){
                         if($data['model'] == "checklist-list"){
                             if(is_array($row)){
+                                $ruta = explode("/", $row['ruta']);
+                                array_push($tmp,Crypt::decrypt($ruta[2]));
                                 array_push($tmp, $row['area']);
                                 array_push($tmp,$row['tienda']);
                                 array_push($tmp,$row['sucursal']);
                                 array_push($tmp,$row['supervisor']);
-                                array_push($tmp,$row['fecha']);
-                                $ruta = explode("/", $row['ruta']);
-                                array_push($tmp,Crypt::decrypt($ruta[2]));
+                                $fecha = explode("-", $row['fecha']);
+                                array_push($tmp,$fecha[2]);
+                                array_push($tmp,date("F",$fecha[1]));
+                                array_push($tmp,$fecha[0]);
+
+                                $this->addValuesDetail($tmp,Crypt::decrypt($ruta[2]));
+
                             }
                         }
                         if($data['model'] == "checklist-filters"){
                         	if(is_object($row)){
-                        		array_push($tmp, $row->area);
+                                array_push($tmp,$row->id);
+                                array_push($tmp, $row->area);
                                 array_push($tmp,$row->local);
                                 array_push($tmp,$row->sucursal);
                                 array_push($tmp,ucwords($row->user)." ".ucwords($row->ape_paterno));
-                                array_push($tmp,$row->created_at);
-                                array_push($tmp,$row->id);
+                                $tmp = explode(" ", $row->created_at);
+
+                                $fecha = explode("-", $tmp);
+                                array_push($tmp,$fecha[0]);
+                                array_push($tmp,date("F",$fecha[1]));
+                                array_push($tmp,$fecha[2]);
+
+                                $this->addValuesDetail($tmp,$row->id);
                         	}
                         }
                     }
@@ -452,6 +470,22 @@ class ReportesController extends BaseController {
             );
 
         return $response;
+    }
+
+    private function addQuestionHeaders(&$headersCSV,$area){
+        $headers = PreguntaRepo::getQuestionFromArea($area);
+        foreach ($headers as $questions){
+            array_push($headersCSV, $questions->pregunta);
+            array_push($headersCSV, "Comentario");
+        }
+    }
+
+    private function addValuesDetail(&$tmp,$idChecklist){
+        $values = ChecklistRepo::details($idChecklist)->get();
+        foreach ($values as $question){
+            array_push($tmp, $question->respuesta);
+            array_push($tmp, $question->comentario);
+        }
     }
 
 }

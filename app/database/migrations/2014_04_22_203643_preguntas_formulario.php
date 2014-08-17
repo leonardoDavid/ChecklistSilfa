@@ -16,6 +16,7 @@ class PreguntasFormulario extends Migration {
 			$tabla->increments('id')->unique();
 			$tabla->integer('pregunta_id')->unsigned();
 			$tabla->integer('formulario_id')->unsigned();
+			$tabla->float('ponderation')->unsigned();
 			$tabla->dateTime('created_at')->default('0000-00-00 00:00:00');
 			$tabla->dateTime('updated_at')->default('0000-00-00 00:00:00');
 		});

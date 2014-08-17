@@ -104,8 +104,8 @@
 
 @section('scripts')
     var tmp_id;
-    var total = {{ $Total }};
-    var space = Math.round(100/total);
+    var total = 0;
+    var space = 0;
 
     $("input[type=checkbox]").on("click",refreshPorcent);
     $('input[type="text"]').keyup(refreshPorcent);
@@ -119,12 +119,20 @@
     });
 
     function refreshPorcent(){
-        tmp = $("input:checked").length;
-        $("input[type='text']").each(function(index, el) {
-            if($(this).val().trim() != "" && $(this).parent().parent().data('contable') == 1)
-                tmp++;
+        var tmp = 0;
+        $("input:checked").each(function(index, el) {
+            if($(this).val().trim() != "" && $(this).parent().parent().data('contable') != "0")
+                tmp = tmp + parseFloat($(this).parent().parent().parent().data('contable'));
         });
-        space = (Math.round(100/total)+1)*tmp;
+
+        $("input[type='text']").each(function(index, el) {
+            if($(this).val().trim() != "" && $(this).parent().parent().data('contable') != "0")
+                tmp = tmp + parseFloat($(this).parent().parent().data('contable'));
+        });
+
+        console.log(tmp);
+
+        space = Math.round(tmp);
         if(space > 100)
             space = 100;
         $('.progress-bar').css('width',space+'%');

@@ -180,7 +180,7 @@
     margin: 0 auto;
 }
 .loading-box{
-    z-index: 2;
+    z-index: 6;
     position: fixed;
     background: #F1E774;
     left: 38.5%;
