@@ -76,7 +76,7 @@ class ReportesController extends BaseController {
 
         $form = ChecklistRepo::details($idChecklist)->get();
         $questions = "";
-        $god = $wrong = $all = 0;
+        $porcent = 0;
         foreach ($form as $question){
             if( ($question->tipo == "checkbox" && $question->respuesta == "1") || ($question->tipo == "text" && $question->respuesta != "") ){
                 if($question->tipo == "checkbox" && $question->respuesta == "1")
@@ -86,11 +86,9 @@ class ReportesController extends BaseController {
                 else
                     $valor = "";
                 if($question->isContable == 1)
-                    $god++;
+                    $porcent += $question->ponderacion;
             }
             else{
-                if($question->isContable == 1)
-                    $wrong++;
                 $valor = "";
             }
             if($question->comentario != "")
@@ -106,8 +104,6 @@ class ReportesController extends BaseController {
                 'Value' => $valor,
                 'HasComment' => $clase
             ));
-            if($question->isContable == 1)
-                $all++;
         }
 
         return View::make('Reportes.DetailReport',array(
@@ -123,7 +119,7 @@ class ReportesController extends BaseController {
             'sucursal' => $info[0]->sucursal,
             'Form' => $questions,
             'comentario' => $info[0]->comentario,
-            'Porcent' => round((100*$god)/$all)
+            'Porcent' => round($porcent)
         ));
     }
 
@@ -358,7 +354,7 @@ class ReportesController extends BaseController {
                     fputcsv($file, array('Pregunta','Respuesta','Comentario'));
                 }
 
-                $god = $wrong = $all = 0;
+                $porcent = 0;
                 foreach ($data as $row){
                     $tmp = array();
 
@@ -402,17 +398,11 @@ class ReportesController extends BaseController {
                         if($more['model'] == "checklist-details"){
                             if( ($row->tipo == "checkbox" && $row->respuesta == "1") || ($row->tipo == "text" && $row->respuesta != "") ){
                                 if($row->isContable == 1)
-                                    $god++;
-                            }
-                            else{
-                                if($row->isContable == 1)
-                                    $wrong++;
+                                    $porcent += $row->ponderacion;
                             }
                             array_push($tmp, $row->texto);
                             array_push($tmp, $row->respuesta);
                             array_push($tmp, $row->comentario);
-                            if($row->isContable == 1)
-                                $all++;
                         }
                         else if ($more['model'] == 'user'){
                             array_push($tmp, $row->nombre);
@@ -432,7 +422,7 @@ class ReportesController extends BaseController {
 
                 if(!is_null($more) && $more['model'] == "checklist-details"){
                     fputcsv($file, array('---','---','---'));
-                    fputcsv($file, array('Porcentaje Final' , round((100*$god)/$all)));
+                    fputcsv($file, array('Porcentaje Final' , round($porcent)));
                 }
 
                 fclose($file);
@@ -478,14 +468,21 @@ class ReportesController extends BaseController {
             array_push($headersCSV, $questions->pregunta);
             array_push($headersCSV, "Comentario");
         }
+        array_push($headersCSV, "Porcentaje");
     }
 
     private function addValuesDetail(&$tmp,$idChecklist){
         $values = ChecklistRepo::details($idChecklist)->get();
+        $porcent = 0;
         foreach ($values as $question){
+            if( ($question->tipo == "checkbox" && $question->respuesta == "1") || ($question->tipo == "text" && $question->respuesta != "") ){
+                if($question->isContable == 1)
+                    $porcent += $question->ponderacion;
+            }
             array_push($tmp, $question->respuesta);
             array_push($tmp, $question->comentario);
         }
+        array_push($tmp, $porcent);
     }
 
 }
