@@ -77,16 +77,22 @@ class ReportesController extends BaseController {
         $form = ChecklistRepo::details($idChecklist)->get();
         $questions = "";
         $porcent = 0;
+        $aux = 0;
         foreach ($form as $question){
             if( ($question->tipo == "checkbox" && $question->respuesta == "1") || ($question->tipo == "text" && $question->respuesta != "") ){
-                if($question->tipo == "checkbox" && $question->respuesta == "1")
+                if($question->tipo == "checkbox" && $question->respuesta == "1"){
                     $valor = "checked";
-                else if($question->tipo == "text" && $question->respuesta != "")
+                }
+                else if($question->tipo == "text" && $question->respuesta != ""){
                     $valor = $question->respuesta;
-                else
+                }
+                else{
                     $valor = "";
-                if($question->isContable == 1)
+                }
+
+                if($question->isContable == 1){
                     $porcent += $question->ponderacion;
+                }
             }
             else{
                 $valor = "";
@@ -105,7 +111,6 @@ class ReportesController extends BaseController {
                 'HasComment' => $clase
             ));
         }
-
         return View::make('Reportes.DetailReport',array(
             'MainMenu' => View::make('Menu.MainMenu',array(
                 'MoreMenu' => Util::getMenu()

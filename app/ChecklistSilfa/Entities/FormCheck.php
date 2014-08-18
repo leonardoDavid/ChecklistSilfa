@@ -9,6 +9,7 @@ class FormCheck extends \Eloquent{
 	public function preguntas(){
         return $this->belongsToMany('ChecklistSilfa\Entities\Pregunta', 'preguntas_formulario', 'formulario_id', 'pregunta_id')
         		->where('preguntas.estado','=','1')
-        		->addSelect('preguntas_formulario.ponderation as ponderacion');
+        		->addSelect('preguntas_formulario.ponderation as ponderacion')
+        		->addSelect('preguntas_formulario.id as idrelation');
     }
 }

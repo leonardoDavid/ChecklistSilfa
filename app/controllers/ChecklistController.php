@@ -110,16 +110,18 @@ class ChecklistController extends BaseController {
 
         $questions = "";
         foreach ($form as $question){
-            if($question->id < 10)
-                $hash = "0".$question->id;
+            if($question->idrelation < 10)
+                $hash = "00".$question->idrelation;
+            else if($question->idrelation >= 10 && $question->idrelation < 100)
+                $hash = "0".$question->idrelation;
             else
-                $hash = $question->id;
+                $hash = $question->idrelation;
             $questions .= View::make('Forms.Question',array(
                 'Type' => $question->tipo,
-                'ID' => $hash.md5($question->id.date("Ymdhis")),
+                'ID' => $hash.md5($question->idrelation.date("Ymdhis")),
                 'Pregunta' => $question->texto,
                 'contable' => $question->ponderacion,
-                'CheckID' => md5($question->id.$question->texto.date("Ymd"))
+                'CheckID' => md5($question->idrelation.$question->texto.date("Ymd"))
             ));
         }
 

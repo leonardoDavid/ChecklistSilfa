@@ -63,7 +63,7 @@ class ChecklistManager{
                 foreach ($datos as $answer){
                     $resp = new ChecklistDetalle;
                     $resp->checklist_id = $checklist->id;
-                    $resp->preguntas_form_id = (int)substr($answer['id'], 0,2);
+                    $resp->preguntas_form_id = (int)substr($answer['id'], 0,3);
                     $resp->respuesta = $answer['valor'];
                     $resp->comentario = $answer['comment'];
                     $resp->estado = 1;
