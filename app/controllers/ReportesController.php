@@ -237,7 +237,7 @@ class ReportesController extends BaseController {
     private function _listCheck($filters = null){
         $files = "";
 
-        $list = (is_null($filters)) ? ChecklistRepo::reports()->paginate(5) : ChecklistRepo::reports($filters)->paginate(5);
+        $list = (is_null($filters)) ? ChecklistRepo::reports()->paginate(15) : ChecklistRepo::reports($filters)->paginate(15);
 
         if(count($list) > 0){
             foreach ($list as $row){
@@ -322,6 +322,8 @@ class ReportesController extends BaseController {
                 array_push($headersCSV, 'Dia');
 
                 $this->addQuestionHeaders($headersCSV,$data[0]['area']);
+
+                array_push($headersCSV, 'Comentario Final');
             }
         }
         else{
@@ -378,6 +380,7 @@ class ReportesController extends BaseController {
                                 array_push($tmp,$fecha[0]);
 
                                 $this->addValuesDetail($tmp,Crypt::decrypt($ruta[2]));
+                                array_push($tmp, $this->addInfoChecklist('comentario',Crypt::decrypt($ruta[2])) );
 
                             }
                         }
@@ -396,6 +399,8 @@ class ReportesController extends BaseController {
                                 array_push($tmp,$fecha[2]);
 
                                 $this->addValuesDetail($tmp,$row->id);
+
+                                array_push($tmp,$row->comentario_final);
                         	}
                         }
                     }
@@ -432,6 +437,7 @@ class ReportesController extends BaseController {
 
                 fclose($file);
 
+                /*'cristian.caravia@silfa.cl',*/
                 $datos = array(
                     'template' => "emails.SendReport",
                     'info' => array(
@@ -440,6 +446,7 @@ class ReportesController extends BaseController {
                     'receptor' => array(
                         'email' => Auth::user()->email,
                         'name' => 'Sistema de Checklist',
+                        'cc' => array('edward.barriga@silfa.cl'),
                         'subject' => 'Solicitud de Reporte'
                     ),
                     'reporte' => $fileLocation
@@ -471,9 +478,9 @@ class ReportesController extends BaseController {
         $headers = PreguntaRepo::getQuestionFromArea($area);
         foreach ($headers as $questions){
             array_push($headersCSV, $questions->pregunta);
-            array_push($headersCSV, "Comentario");
+            array_push($headersCSV, "Comentario - ".$questions->pregunta);
         }
-        array_push($headersCSV, "Porcentaje");
+        array_push($headersCSV, "Porcentaje Final");
     }
 
     private function addValuesDetail(&$tmp,$idChecklist){
@@ -487,7 +494,12 @@ class ReportesController extends BaseController {
             array_push($tmp, $question->respuesta);
             array_push($tmp, $question->comentario);
         }
-        array_push($tmp, $porcent);
+        array_push($tmp, round($porcent));
+    }
+
+    private function addInfoChecklist($field,$id){
+        $reporte = ChecklistRepo::infoReport($id)->get();
+        return $reporte[0]->$field;
     }
 
 }

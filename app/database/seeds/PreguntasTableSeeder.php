@@ -59,7 +59,7 @@ class PreguntasTableSeeder extends Seeder{
 			'estado' => 1
         ));
         Pregunta::create(array(
-            'texto' => "Exhibiciones Aven",
+            'texto' => "Exhibiciones Avent",
             'tipo' => "checkbox",
             'isContable' => 1,
 			'estado' => 1

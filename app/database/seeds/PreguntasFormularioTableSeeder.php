@@ -7,26 +7,26 @@ class PreguntasFormularioTableSeeder extends Seeder {
         //Formulario de jugueteria
         PreguntaFormulario::create(array('pregunta_id' => 1,'formulario_id' => 1,"ponderation" => 0 ));
         PreguntaFormulario::create(array('pregunta_id' => 2,'formulario_id' => 1,"ponderation" => 0 ));
-        PreguntaFormulario::create(array('pregunta_id' => 13,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 14,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 15,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 17,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 19,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 20,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 21,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 22,'formulario_id' => 1,"ponderation" => 11.1 ));
-        PreguntaFormulario::create(array('pregunta_id' => 23,'formulario_id' => 1,"ponderation" => 11.1 ));
+        PreguntaFormulario::create(array('pregunta_id' => 13,'formulario_id' => 1,"ponderation" => 14.28 ));
+        PreguntaFormulario::create(array('pregunta_id' => 14,'formulario_id' => 1,"ponderation" => 14.28 ));
+        PreguntaFormulario::create(array('pregunta_id' => 15,'formulario_id' => 1,"ponderation" => 0 ));
+        PreguntaFormulario::create(array('pregunta_id' => 17,'formulario_id' => 1,"ponderation" => 14.28 ));
+        PreguntaFormulario::create(array('pregunta_id' => 19,'formulario_id' => 1,"ponderation" => 0 ));
+        PreguntaFormulario::create(array('pregunta_id' => 20,'formulario_id' => 1,"ponderation" => 14.28 ));
+        PreguntaFormulario::create(array('pregunta_id' => 21,'formulario_id' => 1,"ponderation" => 14.28 ));
+        PreguntaFormulario::create(array('pregunta_id' => 22,'formulario_id' => 1,"ponderation" => 14.28 ));
+        PreguntaFormulario::create(array('pregunta_id' => 23,'formulario_id' => 1,"ponderation" => 14.32 ));
 
         //Formulario Hogar
         PreguntaFormulario::create(array('pregunta_id' => 2,'formulario_id' => 2,"ponderation" => 0 ));
-        PreguntaFormulario::create(array('pregunta_id' => 11,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 12,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 13,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 14,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 15,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 16,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 17,'formulario_id' => 2,"ponderation" => 12.5 ));
-        PreguntaFormulario::create(array('pregunta_id' => 18,'formulario_id' => 2,"ponderation" => 12.5 ));
+        PreguntaFormulario::create(array('pregunta_id' => 11,'formulario_id' => 2,"ponderation" => 16.6 ));
+        PreguntaFormulario::create(array('pregunta_id' => 12,'formulario_id' => 2,"ponderation" => 16.6 ));
+        PreguntaFormulario::create(array('pregunta_id' => 13,'formulario_id' => 2,"ponderation" => 16.6 ));
+        PreguntaFormulario::create(array('pregunta_id' => 14,'formulario_id' => 2,"ponderation" => 16.6 ));
+        PreguntaFormulario::create(array('pregunta_id' => 15,'formulario_id' => 2,"ponderation" => 0 ));
+        PreguntaFormulario::create(array('pregunta_id' => 16,'formulario_id' => 2,"ponderation" => 0 ));
+        PreguntaFormulario::create(array('pregunta_id' => 17,'formulario_id' => 2,"ponderation" => 16.6 ));
+        PreguntaFormulario::create(array('pregunta_id' => 18,'formulario_id' => 2,"ponderation" => 17 ));
 
         //Formulario Bebe
         PreguntaFormulario::create(array('pregunta_id' => 1,'formulario_id' => 3,"ponderation" => 0 ));
@@ -42,7 +42,7 @@ class PreguntasFormularioTableSeeder extends Seeder {
         PreguntaFormulario::create(array('pregunta_id' => 11,'formulario_id' => 3,"ponderation" => 8.3 ));
         PreguntaFormulario::create(array('pregunta_id' => 12,'formulario_id' => 3,"ponderation" => 8.3 ));
         PreguntaFormulario::create(array('pregunta_id' => 13,'formulario_id' => 3,"ponderation" => 8.3 ));
-        PreguntaFormulario::create(array('pregunta_id' => 14,'formulario_id' => 3,"ponderation" => 8.3 ));
+        PreguntaFormulario::create(array('pregunta_id' => 14,'formulario_id' => 3,"ponderation" => 8.7 ));
 
     }
 }

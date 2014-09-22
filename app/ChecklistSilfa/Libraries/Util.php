@@ -90,7 +90,12 @@ class Util{
             Mail::queue($datos['template'], $datos['info'] , function($message) use($datos) {
                 $message->to($datos['receptor']['email'], $datos['receptor']['name'])->subject($datos['receptor']['subject']);
                 if(array_key_exists('reporte', $datos))
-                     $message->attach($datos['reporte']);
+                    $message->attach($datos['reporte']);                
+                if(array_key_exists('cc', $datos['receptor']) && is_array($datos['receptor']['cc']) && count($datos['receptor']['cc']) > 0 ){
+                    foreach ($datos['receptor']['cc'] as $copia){
+                        $message->cc($copia);
+                    }
+                }                
             });
             return true;
         }

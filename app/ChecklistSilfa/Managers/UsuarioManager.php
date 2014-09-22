@@ -153,8 +153,8 @@ class UsuarioManager{
     }
 
     public static function generateUsername($nombre,$apellido){
-        $nombre = strtolower($nombre);
-        $apellido = strtolower($apellido);
+        $nombre = strtolower(trim(substr($nombre, 0,9)));
+        $apellido = strtolower(trim(substr($apellido, 0,8)));
 
         $option = 1;
         $largo = strlen($nombre);

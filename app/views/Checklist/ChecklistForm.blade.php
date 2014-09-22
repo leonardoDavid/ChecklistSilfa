@@ -34,6 +34,7 @@
 		</ul>
 		<form action="/ingresar/save" method="post">
 			{{ $Form }}
+            <h3>Comentario Final de la Visita</h3>
             <textarea name="final-comment" id="final-comment" class="form-control comment-final" placeholder="Algun resumen general de tu visita?"></textarea>
 		</form>
 		<div class="center">

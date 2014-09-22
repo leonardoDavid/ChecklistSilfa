@@ -38,7 +38,7 @@
 			</div>
 		</div>
 		{{ $Form }}
-
+        <h3>Comentario Final</h3>
 		<textarea id="comment.final" class="form-control comment-final" disabled>{{ $comentario }}</textarea>
 
         <!-- Modales -->
