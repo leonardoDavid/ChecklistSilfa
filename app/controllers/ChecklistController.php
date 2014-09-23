@@ -106,7 +106,7 @@ class ChecklistController extends BaseController {
     }
 
     private function _loadForm($area){
-        $form = FormRepo::find($area)->preguntas;
+        $form = FormRepo::find($area)->preguntas()->get();
 
         $questions = "";
         foreach ($form as $question){
