@@ -7,7 +7,7 @@
     <meta name="description" content="Sistema de Checklist para supervisores Silfa">
     <meta name="author" content="Evolutionet Chile">
     @yield('special-meta')
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="shortcut icon" href="/img/icono.png">
     <title>@yield('title','Sistema de Checklist')</title>
 
     <!-- Styles -->

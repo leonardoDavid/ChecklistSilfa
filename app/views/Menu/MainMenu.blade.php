@@ -30,7 +30,7 @@
 		</a>
 	</ul>
 	<figure class="logo">
-        <img src="/img/silfa.svg">
+        <img src="/img/logo.png">
         <figcaption>Checklist System</figcaption>
     </figure>
 </nav>

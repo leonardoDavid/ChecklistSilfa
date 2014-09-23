@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="Sistema de Checklist para supervisores Silfa">
     <meta name="author" content="Evolutionet Chile">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="shortcut icon" href="/img/icono.png">
     <title>Sistma de Checklist</title>
 
     <!-- Styles -->
@@ -39,7 +39,7 @@
             </div>
             @endif
             <figure class="col-xs-12 col-md-4 logo center-block">
-                <img src="/img/silfa.svg">
+                <img src="/img/logo.png">
             </figure>
             <section class="contenedor col-xs-12 center-block">
                 <h2>Sistema de Checklist</h2>
