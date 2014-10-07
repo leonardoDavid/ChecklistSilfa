@@ -391,9 +391,9 @@ class ReportesController extends BaseController {
                                 array_push($tmp,$row->local);
                                 array_push($tmp,$row->sucursal);
                                 array_push($tmp,ucwords($row->user)." ".ucwords($row->ape_paterno));
-                                $tmp = explode(" ", $row->created_at);
+                                $fecha = explode(" ", $row->created_at);
 
-                                $fecha = explode("-", $tmp);
+                                $fecha = explode("-", $fecha[0]);
                                 array_push($tmp,$fecha[0]);
                                 array_push($tmp,date("F",$fecha[1]));
                                 array_push($tmp,$fecha[2]);

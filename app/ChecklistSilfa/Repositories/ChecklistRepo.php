@@ -21,7 +21,7 @@ class ChecklistRepo{
 		$query = Checklist::where('checklist.estado','=','1');
         if(array_key_exists('area', $filters) && !is_null($filters['area']))
         	$query->where('checklist.area_id','=',$filters['area']);
-
+        
         if(array_key_exists('tienda', $filters) && !is_null($filters['tienda']))
         	$query->where('local.id','=',$filters['tienda']);
 
