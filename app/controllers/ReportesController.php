@@ -366,6 +366,7 @@ class ReportesController extends BaseController {
                     $tmp = array();
 
                     if(is_null($more)){
+                        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
                         if($data['model'] == "checklist-list"){
                             if(is_array($row)){
                                 $ruta = explode("/", $row['ruta']);
@@ -376,7 +377,7 @@ class ReportesController extends BaseController {
                                 array_push($tmp,$row['supervisor']);
                                 $fecha = explode("-", $row['fecha']);
                                 array_push($tmp,$fecha[2]);
-                                array_push($tmp,date("F",$fecha[1]));
+                                array_push($tmp,$meses[round($fecha[1])-1] );
                                 array_push($tmp,$fecha[0]);
 
                                 $this->addValuesDetail($tmp,Crypt::decrypt($ruta[2]));
@@ -395,7 +396,7 @@ class ReportesController extends BaseController {
 
                                 $fecha = explode("-", $fecha[0]);
                                 array_push($tmp,$fecha[0]);
-                                array_push($tmp,date("F",$fecha[1]));
+                                array_push($tmp,$meses[round($fecha[1])-1] );
                                 array_push($tmp,$fecha[2]);
 
                                 $this->addValuesDetail($tmp,$row->id);
