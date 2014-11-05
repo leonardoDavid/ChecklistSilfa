@@ -94,8 +94,8 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" id="send-complete">Si, gestionar</button>
-                        <button type="button" class="btn btn-danger btn-sm" id="cancel-send">Cancelar Envio</button>
+                        <button type="button" class="btn btn-danger btn-sm" id="send-complete">No, enviar</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Cancelar Envio</button>
                     </div>
                 </div>
             </div>
@@ -226,8 +226,8 @@
         $('#sure').modal();
     });
 
-    $('#cancel-send').click(function(){
-        window.location = "/ingresar";
+    $('#send-complete').click(function(){
+        sendData();
     });
 
     $('#cancel-sure').click(function(){

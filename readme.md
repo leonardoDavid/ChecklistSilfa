@@ -1,4 +1,2 @@
 ChecklistSilfa
-===============
-
-Estamos en Beta :)
+==============
