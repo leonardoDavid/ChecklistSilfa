@@ -237,11 +237,14 @@
     $('#save-checklist').click(function(){
         var complete = $('.porcent').text();
         var porcent = complete.substring(0,complete.length - 1);
+        /*
         if(porcent < 70){
             $('#not-complete').modal();
         }
         else{
             sendData();
         }
+        */
+        sendData();
     });
 @stop

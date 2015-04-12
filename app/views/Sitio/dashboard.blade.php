@@ -33,7 +33,7 @@
         <div class="statics statics-local">
             <span class="icon-store"></span>
             <span class="number">{{ $Tiendas }}</span>
-            <span class="text">Tiendas</span>
+            <span class="text">Clientes</span>
         </div>
     </section>
 @stop

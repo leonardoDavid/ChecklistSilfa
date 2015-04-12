@@ -40,9 +40,9 @@
 			</div>
 
 			<div class="container-input">
-				<label for="tienda" class="col-xs-12 label-control">Tienda</label>
+				<label for="tienda" class="col-xs-12 label-control">Cliente</label>
 				<select name="tienda" id="tienda" class="form-control">
-					<option value="0">Seleccione una Tienda</option>
+					<option value="0">Seleccione un Cliente</option>
 					{{ $Tiendas }}
 				</select>
 			</div>
